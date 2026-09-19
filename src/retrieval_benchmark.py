@@ -10,6 +10,7 @@ Usage::
 
     python -m src.retrieval_benchmark --method dense       # all 500, K<=10
     python -m src.retrieval_benchmark --method bm25
+    python -m src.retrieval_benchmark --method hybrid
     python -m src.retrieval_benchmark --method bm25 --limit 5
 
 Artifacts::
@@ -18,6 +19,8 @@ Artifacts::
     results/retrieval/dense_retrieval.meta.json    dense config + metrics
     results/retrieval/bm25_retrieval.jsonl         BM25 per-question rankings
     results/retrieval/bm25_retrieval.meta.json     BM25 config + metrics
+    results/retrieval/hybrid_retrieval.jsonl       RRF-fused per-question rankings
+    results/retrieval/hybrid_retrieval.meta.json   dense+BM25+RRF config + metrics
 """
 
 from __future__ import annotations
@@ -30,12 +33,17 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from src import config, dataset, evaluation
-from src.retrieval import BM25Retriever, DenseRetriever, RetrievalResult
+from src.retrieval import BM25Retriever, DenseRetriever, HybridRetriever, RetrievalResult
 
-RETRIEVER_CLASSES: dict[str, type] = {"dense": DenseRetriever, "bm25": BM25Retriever}
+RETRIEVER_CLASSES: dict[str, type] = {
+    "dense": DenseRetriever,
+    "bm25": BM25Retriever,
+    "hybrid": HybridRetriever,
+}
 METHOD_PATHS: dict[str, tuple[Path, Path]] = {
     "dense": (config.DENSE_RESULTS_FILE, config.DENSE_RESULTS_META_FILE),
     "bm25": (config.BM25_RESULTS_FILE, config.BM25_RESULTS_META_FILE),
+    "hybrid": (config.HYBRID_RESULTS_FILE, config.HYBRID_RESULTS_META_FILE),
 }
 
 
@@ -196,6 +204,17 @@ def main(argv: Sequence[str] | None = None) -> int:
             f"  implementation   {retriever['implementation']} {retriever['library_version']} "
             f"(k1={retriever['k1']}, b={retriever['b']}, epsilon={retriever['epsilon']})"
         )
+    elif args.method == "hybrid":
+        fusion = retriever["fusion"]
+        print(
+            f"  fusion           {fusion['algorithm']}, constant={fusion['rrf_constant']}, "
+            f"depth={fusion['rrf_depth']} (ranks only, raw scores never mixed)"
+        )
+        print(f"  dense source     {retriever['dense']['embedding_model']} ({retriever['dense']['embedding_device']})")
+        print(
+            f"  bm25 source      {retriever['bm25']['implementation']} "
+            f"(k1={retriever['bm25']['k1']}, b={retriever['bm25']['b']}, epsilon={retriever['bm25']['epsilon']})"
+        )
     else:
         print(f"  embedding model  {retriever['embedding_model']} ({retriever['embedding_device']})")
         print(f"  index            {retriever['index']}, {retriever['similarity']}")
@@ -209,6 +228,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             f"index+score p95 {latency['search']['p95']:.4f}"
         )
     else:
+        # Dense: search is FAISS; hybrid: search covers BM25 + fusion too.
         breakdown = (
             f"encode mean {latency['encode']['mean']:.4f}, "
             f"search mean {latency['search']['mean']:.4f}"

@@ -8,11 +8,13 @@ Both retrievers are deliberately small and local:
   L2 normalised so that inner-product search equals cosine similarity, index =
   FAISS ``IndexFlatIP``, one index per question and granularity;
 * lexical: ``rank_bm25.BM25Okapi`` built over exactly the same per-question
-  candidate paragraphs / sentences.
+  candidate paragraphs / sentences;
+* hybrid: uses only rank information (RRF, constant frozen in
+  :mod:`src.config`), so the two score scales are never mixed.
 
 Both retrievers return the same :class:`RetrievalResult`, so a single
 evaluation path (:mod:`src.evaluation`) and a single benchmark runner
-(:mod:`src.retrieval_benchmark`) serve both methods.
+(:mod:`src.retrieval_benchmark`) serve all methods.
 
 Two granularities are produced for every question:
 
@@ -52,16 +54,30 @@ def tokenize(text: str) -> list[str]:
 
 @dataclass(frozen=True)
 class RankedHit:
-    """One ranked retrieval hit (a paragraph when ``sent_id`` is None)."""
+    """One ranked retrieval hit (a paragraph when ``sent_id`` is None).
+
+    Fused (hybrid) hits additionally carry the per-source provenance, i.e. the
+    rank and score each source gave the item; those fields are omitted from
+    ``to_dict()`` for pure dense/BM25 hits so their records stay unchanged.
+    """
 
     rank: int
     title: str
     score: float
     sent_id: int | None = None
+    dense_rank: int | None = None
+    bm25_rank: int | None = None
+    dense_score: float | None = None
+    bm25_score: float | None = None
 
     @property
     def is_sentence(self) -> bool:
         return self.sent_id is not None
+
+    @property
+    def has_provenance(self) -> bool:
+        """True for fused hits, which know which source(s) produced them."""
+        return self.dense_rank is not None or self.bm25_rank is not None
 
     def identifier(self) -> str:
         """``title`` for paragraphs, ``title::sent_id`` for sentences."""
@@ -71,6 +87,12 @@ class RankedHit:
         record: dict[str, Any] = {"rank": self.rank, "title": self.title, "score": self.score}
         if self.sent_id is not None:
             record["sent_id"] = self.sent_id
+        if self.has_provenance:
+            record["rrf_score"] = self.score
+            record["dense_rank"] = self.dense_rank
+            record["bm25_rank"] = self.bm25_rank
+            record["dense_score"] = self.dense_score
+            record["bm25_score"] = self.bm25_score
         return record
 
 
@@ -345,6 +367,156 @@ class BM25Retriever:
             "tokenizer": "lowercase [a-z0-9]+ tokens (no stemming, no stop-word removal)",
             "corpus": "per-question candidate paragraphs / sentences (distractor setting)",
             "similarity": "BM25 score (unbounded, higher is better)",
+            "granularities": ["paragraph", "sentence"],
+            "max_k": config.RETRIEVAL_MAX_K,
+        }
+
+
+def rrf_score(ranks: Sequence[int], constant: float = config.RRF_CONSTANT) -> float:
+    """Reciprocal Rank Fusion score ``sum(1 / (constant + rank))``.
+
+    Only ranks enter the fusion: the dense and BM25 scores have different
+    scales and are deliberately not combined.
+    """
+    return sum(1.0 / (constant + rank) for rank in ranks if rank is not None and rank > 0)
+
+
+def fuse_rankings(
+    *,
+    dense_hits: Sequence[RankedHit],
+    bm25_hits: Sequence[RankedHit],
+    k: int,
+    depth: int = config.RRF_DEPTH,
+    constant: float = config.RRF_CONSTANT,
+) -> list[RankedHit]:
+    """Fuse a dense and a BM25 ranking with RRF, keeping per-source provenance.
+
+    Candidates are the union of the first ``depth`` items of each ranking; an
+    item that only one source retrieved gets ``None`` rank/score for the other
+    source. Ties are broken deterministically -- RRF score, then best
+    single-source rank, then ``title``, then ``sent_id`` -- so the result never
+    depends on dict or input ordering.
+    """
+    candidates: dict[tuple[str, int | None], dict[str, RankedHit | None]] = {}
+    for source, hits in (("dense", dense_hits), ("bm25", bm25_hits)):
+        for hit in hits[:depth]:
+            entry = candidates.setdefault((hit.title, hit.sent_id), {"dense": None, "bm25": None})
+            entry[source] = hit
+
+    scored: list[tuple[float, int, str, int, RankedHit | None, RankedHit | None]] = []
+    for (title, sent_id), sources in candidates.items():
+        dense_hit, bm25_hit = sources["dense"], sources["bm25"]
+        ranks = [hit.rank for hit in (dense_hit, bm25_hit) if hit is not None]
+        scored.append(
+            (
+                rrf_score(ranks, constant),
+                min(ranks),
+                title,
+                -1 if sent_id is None else sent_id,
+                dense_hit,
+                bm25_hit,
+            )
+        )
+
+    scored.sort(key=lambda item: (-item[0], item[1], item[2], item[3]))
+
+    hits: list[RankedHit] = []
+    for rank, (score, _, title, raw_sent_id, dense_hit, bm25_hit) in enumerate(
+        scored[:k], start=1
+    ):
+        hits.append(
+            RankedHit(
+                rank=rank,
+                title=title,
+                score=score,
+                sent_id=None if raw_sent_id < 0 else raw_sent_id,
+                dense_rank=None if dense_hit is None else dense_hit.rank,
+                bm25_rank=None if bm25_hit is None else bm25_hit.rank,
+                dense_score=None if dense_hit is None else dense_hit.score,
+                bm25_score=None if bm25_hit is None else bm25_hit.score,
+            )
+        )
+    return hits
+
+
+class HybridRetriever:
+    """Reciprocal Rank Fusion of :class:`DenseRetriever` and :class:`BM25Retriever`.
+
+    Both sources run unchanged over the same per-question candidate pool; only
+    their *ranks* are fused (the raw score scales are incomparable and are
+    never mixed). The fused hits keep per-source provenance (rank + score for
+    dense and BM25), so the fusion stays auditable. Ties are broken
+    deterministically by ``fuse_rankings``.
+    """
+
+    def __init__(
+        self,
+        *,
+        dense: DenseRetriever | None = None,
+        bm25: BM25Retriever | None = None,
+        constant: float | None = None,
+        depth: int | None = None,
+    ) -> None:
+        self.dense = dense or DenseRetriever()
+        self.bm25 = bm25 or BM25Retriever()
+        self.constant = config.RRF_CONSTANT if constant is None else constant
+        self.depth = config.RRF_DEPTH if depth is None else depth
+
+    def load(self) -> float:
+        """Load the dense encoder if needed (BM25 has nothing to load)."""
+        return self.dense.load()
+
+    def retrieve(self, example: HotpotExample, k: int = config.RETRIEVAL_MAX_K) -> RetrievalResult:
+        """Fuse the dense and BM25 rankings for ``example`` (paragraphs + sentences)."""
+        # Each source ranks at least ``self.depth`` deep; the fusion candidate
+        # set is their union truncated to ``depth``, then the result to ``k``.
+        depth = max(k, self.depth)
+        started = time.perf_counter()
+        dense_result = self.dense.retrieve(example, k=depth)
+        bm25_result = self.bm25.retrieve(example, k=depth)
+        paragraphs = fuse_rankings(
+            dense_hits=dense_result.paragraphs,
+            bm25_hits=bm25_result.paragraphs,
+            k=k,
+            depth=self.depth,
+            constant=self.constant,
+        )
+        sentences = fuse_rankings(
+            dense_hits=dense_result.sentences,
+            bm25_hits=bm25_result.sentences,
+            k=k,
+            depth=self.depth,
+            constant=self.constant,
+        )
+        total_s = time.perf_counter() - started
+
+        return RetrievalResult(
+            example_id=example.example_id,
+            question=example.question,
+            k=min(k, len(example.context_titles)),
+            paragraphs=paragraphs,
+            sentences=sentences,
+            # encode = the dense embedding step; search+fusion = everything else.
+            encode_s=dense_result.encode_s,
+            search_s=round(max(total_s - dense_result.encode_s, 0.0), 6),
+        )
+
+    def settings(self) -> dict[str, Any]:
+        """Retrieval configuration to store with every result (nested per source)."""
+        return {
+            "retrieval_method": "hybrid",
+            "fusion": {
+                "algorithm": "reciprocal rank fusion (RRF)",
+                "formula": "score(d) = sum(1 / (constant + rank))",
+                "rrf_constant": self.constant,
+                "rrf_depth": self.depth,
+                "candidate_set": "union of the top-rrf_depth items of each source",
+                "raw_scores_used_in_fusion": False,
+                "tie_breaking": "rrf score, then best single-source rank, then title, then sent_id",
+            },
+            "dense": self.dense.settings(),
+            "bm25": self.bm25.settings(),
+            "corpus": "per-question candidate paragraphs / sentences (distractor setting)",
             "granularities": ["paragraph", "sentence"],
             "max_k": config.RETRIEVAL_MAX_K,
         }

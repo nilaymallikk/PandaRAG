@@ -73,11 +73,21 @@ DENSE_RESULTS_FILE = RESULTS_DIR / "retrieval" / "dense_retrieval.jsonl"
 DENSE_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "dense_retrieval.meta.json"
 BM25_RESULTS_FILE = RESULTS_DIR / "retrieval" / "bm25_retrieval.jsonl"
 BM25_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "bm25_retrieval.meta.json"
+HYBRID_RESULTS_FILE = RESULTS_DIR / "retrieval" / "hybrid_retrieval.jsonl"
+HYBRID_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "hybrid_retrieval.meta.json"
 
 # Lexical retrieval (rank_bm25 defaults, kept explicit for the record).
 BM25_K1 = float(os.environ.get("BM25_K1", "1.5"))
 BM25_B = float(os.environ.get("BM25_B", "0.75"))
 BM25_EPSILON = float(os.environ.get("BM25_EPSILON", "0.25"))
+
+# Hybrid retrieval: Reciprocal Rank Fusion of the dense and BM25 rankings.
+# The constant is frozen before the experiment; raw retriever scores are never
+# mixed because their scales are not comparable.
+RRF_CONSTANT = float(os.environ.get("RRF_CONSTANT", "60"))
+# Each source contributes only its top-RRF_DEPTH items (the frozen dense and
+# BM25 artifacts store top-10), so the fusion candidate set is their union.
+RRF_DEPTH = int(os.environ.get("RRF_DEPTH", str(RETRIEVAL_MAX_K)))
 
 STANDARD_RAG_TOP_K = 5
 HYBRID_RAG_TOP_K = 5
@@ -252,6 +262,8 @@ def describe(timestamp: datetime | None = None) -> dict[str, object]:
         "bm25_k1": BM25_K1,
         "bm25_b": BM25_B,
         "bm25_epsilon": BM25_EPSILON,
+        "rrf_constant": RRF_CONSTANT,
+        "rrf_depth": RRF_DEPTH,
         "standard_rag_k": STANDARD_RAG_TOP_K,
         "hybrid_rag_k": HYBRID_RAG_TOP_K,
         "llm_provider": "DeepSeek",
