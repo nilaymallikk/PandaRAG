@@ -71,6 +71,13 @@ RETRIEVAL_MAX_K = max(RETRIEVAL_K_VALUES)
 
 DENSE_RESULTS_FILE = RESULTS_DIR / "retrieval" / "dense_retrieval.jsonl"
 DENSE_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "dense_retrieval.meta.json"
+BM25_RESULTS_FILE = RESULTS_DIR / "retrieval" / "bm25_retrieval.jsonl"
+BM25_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "bm25_retrieval.meta.json"
+
+# Lexical retrieval (rank_bm25 defaults, kept explicit for the record).
+BM25_K1 = float(os.environ.get("BM25_K1", "1.5"))
+BM25_B = float(os.environ.get("BM25_B", "0.75"))
+BM25_EPSILON = float(os.environ.get("BM25_EPSILON", "0.25"))
 
 STANDARD_RAG_TOP_K = 5
 HYBRID_RAG_TOP_K = 5
@@ -242,6 +249,9 @@ def describe(timestamp: datetime | None = None) -> dict[str, object]:
         "embedding_query_instruction": EMBEDDING_QUERY_INSTRUCTION,
         "embedding_device": EMBEDDING_DEVICE,
         "retrieval_k_values": list(RETRIEVAL_K_VALUES),
+        "bm25_k1": BM25_K1,
+        "bm25_b": BM25_B,
+        "bm25_epsilon": BM25_EPSILON,
         "standard_rag_k": STANDARD_RAG_TOP_K,
         "hybrid_rag_k": HYBRID_RAG_TOP_K,
         "llm_provider": "DeepSeek",

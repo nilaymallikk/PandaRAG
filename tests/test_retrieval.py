@@ -20,8 +20,10 @@ from pathlib import Path
 import numpy as np
 
 from src import config, dataset, evaluation
-from src.retrieval import DenseRetriever, RankedHit, RetrievalResult
+from src.retrieval import BM25Retriever, DenseRetriever, RankedHit, RetrievalResult, tokenize
 from src.retrieval_benchmark import (
+    METHOD_PATHS,
+    RETRIEVER_CLASSES,
     build_record,
     load_records,
     load_records_by_id,
@@ -287,6 +289,104 @@ class RetrievalMetricTests(unittest.TestCase):
             self.assertIn(f"{k:>3}", summary)
 
 
+class TokenizerTests(unittest.TestCase):
+    def test_tokenize_lowercases_and_drops_punctuation(self) -> None:
+        self.assertEqual(tokenize("Ada Lovelace's city, 1815!"), ["ada", "lovelace", "s", "city", "1815"])
+        self.assertEqual(tokenize(""), [])
+        self.assertEqual(tokenize("---"), [])
+
+
+class BM25RetrieverTests(unittest.TestCase):
+    """Lexical retrieval behaviour (offline: rank_bm25 only, no model)."""
+
+    def setUp(self) -> None:
+        self.retriever = BM25Retriever()
+        self.example = make_example()
+
+    def test_supporting_paragraph_scores_highest(self) -> None:
+        result = self.retriever.retrieve(self.example, k=config.RETRIEVAL_MAX_K)
+        self.assertEqual(result.paragraphs[0].title, "Ada Lovelace")
+        scores = [hit.score for hit in result.paragraphs]
+        self.assertEqual(scores, sorted(scores, reverse=True))
+        self.assertTrue(all(score >= 0.0 for score in scores))
+        self.assertEqual([hit.rank for hit in result.paragraphs], list(range(1, len(PARAGRAPHS) + 1)))
+        self.assertEqual(result.k, len(PARAGRAPHS))
+
+    def test_hits_are_truncated_to_k_with_titles_and_fact_ids(self) -> None:
+        result = self.retriever.retrieve(self.example, k=2)
+        self.assertEqual(len(result.top_paragraphs(2)), 2)
+        self.assertTrue(all(hit.sent_id is None for hit in result.top_paragraphs(2)))
+        sentence_hits = result.top_sentences(2)
+        self.assertEqual([hit.rank for hit in sentence_hits], [1, 2])
+        self.assertTrue(all(hit.is_sentence and isinstance(hit.sent_id, int) for hit in sentence_hits))
+        self.assertIn("::", sentence_hits[0].identifier())
+
+    def test_gold_supporting_sentence_is_ranked(self) -> None:
+        result = self.retriever.retrieve(self.example, k=5)
+        self.assertIn("Ada Lovelace::0", self.example.supporting_fact_ids)
+        self.assertIn("Ada Lovelace::0", result.sentence_ids(5))
+
+    def test_smaller_k_is_a_prefix_of_the_deeper_ranking(self) -> None:
+        deep = self.retriever.retrieve(self.example, k=config.RETRIEVAL_MAX_K)
+        shallow = self.retriever.retrieve(self.example, k=3)
+        self.assertEqual(deep.paragraph_titles(3), shallow.paragraph_titles(3))
+        self.assertEqual(deep.sentence_ids(3), shallow.sentence_ids(3))
+        deep_scores = [hit.score for hit in deep.top_paragraphs(3)]
+        shallow_scores = [hit.score for hit in shallow.top_paragraphs(3)]
+        self.assertEqual(deep_scores, shallow_scores)
+
+    def test_repeated_calls_are_identical(self) -> None:
+        first = self.retriever.retrieve(self.example, k=config.RETRIEVAL_MAX_K)
+        second = self.retriever.retrieve(self.example, k=config.RETRIEVAL_MAX_K)
+        self.assertEqual(
+            [(hit.title, hit.score) for hit in first.paragraphs],
+            [(hit.title, hit.score) for hit in second.paragraphs],
+        )
+        self.assertEqual(
+            [(hit.identifier(), hit.score) for hit in first.sentences],
+            [(hit.identifier(), hit.score) for hit in second.sentences],
+        )
+
+    def test_query_without_matching_terms_gives_zero_scores_in_corpus_order(self) -> None:
+        unmatched = make_example(question="zzzqqq wwweee")
+        result = self.retriever.retrieve(unmatched, k=config.RETRIEVAL_MAX_K)
+        self.assertTrue(all(hit.score == 0.0 for hit in result.paragraphs))
+        self.assertEqual(result.paragraph_titles(len(PARAGRAPHS)), list(PARAGRAPHS))
+
+    def test_bm25_does_not_use_the_dense_query_instruction(self) -> None:
+        seen: list[str] = []
+
+        def spy(text: str) -> list[str]:
+            seen.append(text)
+            return tokenize(text)
+
+        BM25Retriever(tokenizer=spy).retrieve(self.example, k=3)
+        self.assertIn(QUESTION, seen)
+        self.assertFalse(any(text.startswith(config.EMBEDDING_QUERY_INSTRUCTION) for text in seen))
+
+    def test_empty_pool_returns_no_hits(self) -> None:
+        self.assertEqual(self.retriever._rank([], [], 5, []), [])
+        self.assertEqual(self.retriever._rank([], [], 5, [("Title", None)]), [])
+
+    def test_settings_record_the_bm25_configuration(self) -> None:
+        settings = self.retriever.settings()
+        self.assertEqual(settings["retrieval_method"], "bm25")
+        self.assertEqual(settings["implementation"], "rank_bm25.BM25Okapi")
+        self.assertEqual(settings["k1"], config.BM25_K1)
+        self.assertEqual(settings["b"], config.BM25_B)
+        self.assertEqual(settings["epsilon"], config.BM25_EPSILON)
+        self.assertEqual(settings["max_k"], config.RETRIEVAL_MAX_K)
+        self.assertEqual(settings["granularities"], ["paragraph", "sentence"])
+
+    def test_bm25_result_uses_the_shared_evaluation_path(self) -> None:
+        result = self.retriever.retrieve(self.example, k=config.RETRIEVAL_MAX_K)
+        metrics = evaluation.evaluate_retrieval(result, self.example)
+        self.assertEqual(sorted(metrics, key=int), [str(k) for k in config.RETRIEVAL_K_VALUES])
+        self.assertEqual(metrics["1"]["document_recall"], 0.5)
+        self.assertIn(metrics["5"]["document_complete"], (0.0, 1.0))
+        self.assertGreaterEqual(metrics["10"]["sentence_recall"], metrics["1"]["sentence_recall"])
+
+
 class BenchmarkArtifactTests(unittest.TestCase):
     """Raw retrieval artifacts must be reusable by the later RAG pipelines."""
 
@@ -359,6 +459,76 @@ class BenchmarkArtifactTests(unittest.TestCase):
         fingerprint = dataset.dataset_fingerprint()
         self.assertEqual(fingerprint["sha256"], EXPECTED_DATASET_SHA256)
         self.assertEqual(len(dataset.load_dataset()), config.EXPECTED_DATASET_SIZE)
+
+
+class BenchmarkMethodTests(unittest.TestCase):
+    """Dense and BM25 share one runner but stay distinguishable."""
+
+    def test_methods_and_artifact_paths_are_separate(self) -> None:
+        self.assertEqual(RETRIEVER_CLASSES["dense"], DenseRetriever)
+        self.assertEqual(RETRIEVER_CLASSES["bm25"], BM25Retriever)
+        self.assertEqual(
+            METHOD_PATHS["dense"], (config.DENSE_RESULTS_FILE, config.DENSE_RESULTS_META_FILE)
+        )
+        self.assertEqual(
+            METHOD_PATHS["bm25"], (config.BM25_RESULTS_FILE, config.BM25_RESULTS_META_FILE)
+        )
+        self.assertNotEqual(METHOD_PATHS["dense"][0], METHOD_PATHS["bm25"][0])
+        self.assertEqual(config.BM25_RESULTS_FILE.name, "bm25_retrieval.jsonl")
+        self.assertEqual(config.BM25_RESULTS_META_FILE.name, "bm25_retrieval.meta.json")
+
+    def test_unknown_method_is_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            run_benchmark(method="tfidf", limit=1, quiet=True)
+
+    def test_bm25_benchmark_smoke_writes_its_own_artifacts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            results_path = Path(tmp) / "bm25_retrieval.jsonl"
+            meta_path = Path(tmp) / "bm25_retrieval.meta.json"
+            meta = run_benchmark(
+                method="bm25",
+                limit=2,
+                results_file=results_path,
+                meta_file=meta_path,
+                quiet=True,
+            )
+            records = load_records(results_path)
+            meta_on_disk = json.loads(meta_path.read_text(encoding="utf-8"))
+        self.assertEqual(meta["stage"], "bm25 retrieval benchmark")
+        self.assertEqual(meta["retrieval_method"], "bm25")
+        self.assertEqual(meta["llm_calls"], 0)
+        self.assertFalse(meta["llm_used"])
+        self.assertEqual(meta["retriever"]["implementation"], "rank_bm25.BM25Okapi")
+        self.assertEqual(meta["retriever"]["k1"], config.BM25_K1)
+        self.assertEqual(meta["dataset"]["sha256"], EXPECTED_DATASET_SHA256)
+        self.assertEqual(len(records), 2)
+        for record in records:
+            self.assertEqual(record["retrieval_method"], "bm25")
+            self.assertEqual(
+                [hit["rank"] for hit in record["retrieved_documents"]],
+                list(range(1, len(record["retrieved_documents"]) + 1)),
+            )
+            self.assertTrue(all("score" in hit for hit in record["retrieved_documents"]))
+            self.assertTrue(all("score" in hit and "sent_id" in hit for hit in record["retrieved_sentences"]))
+        self.assertEqual(meta_on_disk["metrics"]["5"]["n_questions"], 2)
+
+    def test_records_of_both_methods_are_distinguishable(self) -> None:
+        example = make_example()
+        records: dict[str, dict] = {}
+        retrievers = {"dense": DenseRetriever(encoder=StubEncoder()), "bm25": BM25Retriever()}
+        for method, retriever in retrievers.items():
+            result = retriever.retrieve(example, k=config.RETRIEVAL_MAX_K)
+            metrics = evaluation.evaluate_retrieval(result, example)
+            records[method] = build_record(example, result, metrics, config.RETRIEVAL_MAX_K, method)
+        self.assertEqual(records["dense"]["retrieval_method"], "dense")
+        self.assertEqual(records["bm25"]["retrieval_method"], "bm25")
+        self.assertEqual(records["dense"]["question_id"], records["bm25"]["question_id"])
+        self.assertEqual(records["bm25"]["encode_s"], 0.0)  # no embedding step for BM25
+        self.assertNotEqual(
+            records["dense"]["retrieved_documents"][0]["score"],
+            records["bm25"]["retrieved_documents"][0]["score"],
+        )
+
 
 
 if __name__ == "__main__":

@@ -1,19 +1,23 @@
-"""Run the dense-retrieval benchmark over all 500 HotpotQA questions.
+"""Run a retrieval benchmark over all 500 HotpotQA questions.
 
 The benchmark is retrieval-only: it never calls the DeepSeek API and it never
-generates an answer. It evaluates the dense retriever against the HotpotQA
-supporting facts and stores the raw rankings so that later RAG pipelines can
-reuse exactly the same retrieval output.
+generates an answer. It evaluates a retriever against the HotpotQA supporting
+facts and stores the raw rankings so that later RAG pipelines can reuse exactly
+the same retrieval output. One runner and one evaluation path serve both
+retrieval methods; only the artifacts differ.
 
 Usage::
 
-    python -m src.retrieval_benchmark                # all 500 questions, K<=10
-    python -m src.retrieval_benchmark --limit 5      # quick run
+    python -m src.retrieval_benchmark --method dense       # all 500, K<=10
+    python -m src.retrieval_benchmark --method bm25
+    python -m src.retrieval_benchmark --method bm25 --limit 5
 
 Artifacts::
 
-    results/retrieval/dense_retrieval.jsonl        raw per-question rankings
-    results/retrieval/dense_retrieval.meta.json    config + aggregate metrics
+    results/retrieval/dense_retrieval.jsonl        dense per-question rankings
+    results/retrieval/dense_retrieval.meta.json    dense config + metrics
+    results/retrieval/bm25_retrieval.jsonl         BM25 per-question rankings
+    results/retrieval/bm25_retrieval.meta.json     BM25 config + metrics
 """
 
 from __future__ import annotations
@@ -26,7 +30,13 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from src import config, dataset, evaluation
-from src.retrieval import DenseRetriever, RetrievalResult
+from src.retrieval import BM25Retriever, DenseRetriever, RetrievalResult
+
+RETRIEVER_CLASSES: dict[str, type] = {"dense": DenseRetriever, "bm25": BM25Retriever}
+METHOD_PATHS: dict[str, tuple[Path, Path]] = {
+    "dense": (config.DENSE_RESULTS_FILE, config.DENSE_RESULTS_META_FILE),
+    "bm25": (config.BM25_RESULTS_FILE, config.BM25_RESULTS_META_FILE),
+}
 
 
 def build_record(
@@ -34,6 +44,7 @@ def build_record(
     result: RetrievalResult,
     metrics: Mapping[str, Mapping[str, float]],
     k_max: int,
+    method: str = "dense",
 ) -> dict[str, Any]:
     """One raw retrieval record, reusable by the RAG pipelines."""
     return {
@@ -42,6 +53,7 @@ def build_record(
         "question_type": example.question_type,
         "level": example.level,
         "gold_answer": example.answer,
+        "retrieval_method": method,
         "supporting_titles": list(example.supporting_titles),
         "supporting_facts": list(example.supporting_fact_ids),
         "k_max": k_max,
@@ -57,17 +69,21 @@ def build_record(
 
 def run_benchmark(
     *,
+    method: str = "dense",
     limit: int | None = None,
     k_max: int = config.RETRIEVAL_MAX_K,
-    retriever: DenseRetriever | None = None,
+    retriever: DenseRetriever | BM25Retriever | None = None,
     results_file: Path | None = None,
     meta_file: Path | None = None,
     quiet: bool = False,
 ) -> dict[str, Any]:
     """Retrieve for every question, save raw results, return the metadata."""
-    retriever = retriever or DenseRetriever()
-    results_path = Path(results_file or config.DENSE_RESULTS_FILE)
-    meta_path = Path(meta_file or config.DENSE_RESULTS_META_FILE)
+    if method not in RETRIEVER_CLASSES:
+        raise ValueError(f"Unknown retrieval method {method!r}; expected {sorted(RETRIEVER_CLASSES)}.")
+    default_results, default_meta = METHOD_PATHS[method]
+    retriever = retriever or RETRIEVER_CLASSES[method]()
+    results_path = Path(results_file or default_results)
+    meta_path = Path(meta_file or default_meta)
 
     examples = dataset.load_dataset()
     if limit is not None:
@@ -76,17 +92,18 @@ def run_benchmark(
     model_load_s = retriever.load()
     records: list[dict[str, Any]] = []
     started = time.perf_counter()
-    for example in _progress(examples, quiet=quiet):
+    for example in _progress(examples, quiet=quiet, method=method):
         result = retriever.retrieve(example, k=k_max)
         metrics = evaluation.evaluate_retrieval(result, example, config.RETRIEVAL_K_VALUES)
-        records.append(build_record(example, result, metrics, k_max))
+        records.append(build_record(example, result, metrics, k_max, method))
     runtime_s = time.perf_counter() - started
 
     aggregate = evaluation.aggregate_retrieval_metrics(
         [record["metrics"] for record in records], config.RETRIEVAL_K_VALUES
     )
     meta: dict[str, Any] = {
-        "stage": "dense retrieval benchmark",
+        "stage": f"{method} retrieval benchmark",
+        "retrieval_method": method,
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "llm_calls": 0,
         "llm_used": False,
@@ -114,7 +131,7 @@ def run_benchmark(
     return meta
 
 
-def _progress(items: Sequence[Any], *, quiet: bool) -> Sequence[Any]:
+def _progress(items: Sequence[Any], *, quiet: bool, method: str = "dense") -> Sequence[Any]:
     """Wrap the question list in a progress bar when tqdm is available."""
     if quiet:
         return items
@@ -122,7 +139,7 @@ def _progress(items: Sequence[Any], *, quiet: bool) -> Sequence[Any]:
         from tqdm import tqdm
     except ImportError:
         return items
-    return tqdm(items, desc="dense retrieval", unit="q")
+    return tqdm(items, desc=f"{method} retrieval", unit="q")
 
 
 def save_records(records: Sequence[Mapping[str, Any]], path: Path) -> Path:
@@ -147,15 +164,22 @@ def load_records_by_id(path: Path | None = None) -> dict[str, dict[str, Any]]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Dense retrieval benchmark (no LLM calls).")
+    parser = argparse.ArgumentParser(description="Retrieval benchmark (no LLM calls).")
+    parser.add_argument(
+        "--method",
+        choices=sorted(RETRIEVER_CLASSES),
+        default="dense",
+        help="retrieval method to benchmark",
+    )
     parser.add_argument("--limit", type=int, default=None, help="only the first N questions")
     parser.add_argument("--k", type=int, default=config.RETRIEVAL_MAX_K, help="max K to rank")
-    parser.add_argument("--results-file", type=Path, default=config.DENSE_RESULTS_FILE)
-    parser.add_argument("--meta-file", type=Path, default=config.DENSE_RESULTS_META_FILE)
+    parser.add_argument("--results-file", type=Path, default=None)
+    parser.add_argument("--meta-file", type=Path, default=None)
     parser.add_argument("--quiet", action="store_true", help="no progress bar")
     args = parser.parse_args(argv)
 
     meta = run_benchmark(
+        method=args.method,
         limit=args.limit,
         k_max=args.k,
         results_file=args.results_file,
@@ -164,24 +188,38 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
 
     retriever = meta["retriever"]
-    print("\nDense retrieval benchmark (retrieval only, no LLM calls)")
+    latency = meta["latency_s"]
+    print(f"\n{args.method.upper()} retrieval benchmark (retrieval only, no LLM calls)")
     print(f"  questions        {meta['n_questions']}")
-    print(f"  embedding model  {retriever['embedding_model']} ({retriever['embedding_device']})")
-    print(f"  index            {retriever['index']}, {retriever['similarity']}")
+    if args.method == "bm25":
+        print(
+            f"  implementation   {retriever['implementation']} {retriever['library_version']} "
+            f"(k1={retriever['k1']}, b={retriever['b']}, epsilon={retriever['epsilon']})"
+        )
+    else:
+        print(f"  embedding model  {retriever['embedding_model']} ({retriever['embedding_device']})")
+        print(f"  index            {retriever['index']}, {retriever['similarity']}")
     print(f"  dataset sha256   {meta['dataset']['sha256']}")
     print(f"  runtime_s        {meta['runtime_s']} (model load {meta['model_load_s']}s)")
     print("\nRetrieval vs HotpotQA supporting facts")
     print(evaluation.format_retrieval_summary(meta["metrics"]))
-    latency = meta["latency_s"]
+    if args.method == "bm25":
+        breakdown = (
+            f"index+score mean {latency['search']['mean']:.4f}, "
+            f"index+score p95 {latency['search']['p95']:.4f}"
+        )
+    else:
+        breakdown = (
+            f"encode mean {latency['encode']['mean']:.4f}, "
+            f"search mean {latency['search']['mean']:.4f}"
+        )
     print(
-        "\nLatency per question (s): "
-        f"encode mean {latency['encode']['mean']:.4f}, "
-        f"search mean {latency['search']['mean']:.4f}, "
+        f"\nLatency per question (s): {breakdown}, "
         f"retrieval mean {latency['retrieval']['mean']:.4f}, "
         f"retrieval total {latency['retrieval']['total']:.2f}"
     )
     print(f"\nraw results      {meta['results_file']}")
-    print(f"metadata         {args.meta_file}")
+    print(f"metadata         {args.meta_file or METHOD_PATHS[args.method][1]}")
     return 0
 
 
