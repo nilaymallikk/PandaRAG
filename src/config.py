@@ -54,8 +54,27 @@ EXPECTED_DATASET_SIZE = 500
 # ---------------------------------------------------------------------------
 
 EMBEDDING_MODEL_NAME = "BAAI/bge-small-en-v1.5"
+
+# BGE's documented "short query -> long passage" usage: the same fixed
+# instruction is prepended to every query (documents are embedded as-is).
+# Source: BAAI/bge-small-en-v1.5 model card (answer by the model authors).
+EMBEDDING_QUERY_INSTRUCTION = "Represent this sentence for searching relevant passages: "
+EMBEDDING_DEVICE = os.environ.get("EMBEDDING_DEVICE", "cpu")
+# Small batches keep padding waste low: sentence-transformers sorts texts by
+# length, but a batch is still padded to its longest member.
+EMBEDDING_BATCH_SIZE = int(os.environ.get("EMBEDDING_BATCH_SIZE", "32"))
+
+# Recall@K values reported for retrieval (K=10 is the deepest ranking produced,
+# smaller K are prefixes of it).
+RETRIEVAL_K_VALUES = (1, 3, 5, 10)
+RETRIEVAL_MAX_K = max(RETRIEVAL_K_VALUES)
+
+DENSE_RESULTS_FILE = RESULTS_DIR / "retrieval" / "dense_retrieval.jsonl"
+DENSE_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "dense_retrieval.meta.json"
+
 STANDARD_RAG_TOP_K = 5
 HYBRID_RAG_TOP_K = 5
+
 
 # ---------------------------------------------------------------------------
 # DeepSeek LLM
@@ -220,6 +239,9 @@ def describe(timestamp: datetime | None = None) -> dict[str, object]:
         "dataset_file": str(DATASET_FILE),
         "dataset_size": EXPECTED_DATASET_SIZE,
         "embedding_model": EMBEDDING_MODEL_NAME,
+        "embedding_query_instruction": EMBEDDING_QUERY_INSTRUCTION,
+        "embedding_device": EMBEDDING_DEVICE,
+        "retrieval_k_values": list(RETRIEVAL_K_VALUES),
         "standard_rag_k": STANDARD_RAG_TOP_K,
         "hybrid_rag_k": HYBRID_RAG_TOP_K,
         "llm_provider": "DeepSeek",

@@ -20,6 +20,17 @@ Questions:
 
 500
 
+Distribution:
+
+- 500 questions total
+- 400 bridge
+- 100 comparison
+- 500 hard
+
+Dataset fingerprint (SHA-256):
+
+956405ceb43d73385d60898e1bfc7f45a8184c9a4e1eff45b9a8ec239acfd048
+
 The dataset is fixed and must not be modified.
 
 ---
