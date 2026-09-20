@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1200" height="900" fill="white"/>
+  <defs>
+    <marker id="ah2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <text x="600" y="30" text-anchor="middle" font-size="26" font-weight="bold" fill="#1e1e1e">Adaptive RAG Research — Whole System</text>
+  <text x="600" y="54" text-anchor="middle" font-size="14" fill="#757575">HotpotQA 500 · DeepSeek-V4.1-Flash · four pipelines · shared evaluation</text>
+
+  <!-- data + retrieval -->
+  <rect x="40" y="84" width="230" height="68" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <text x="155" y="112" text-anchor="middle" font-size="14" fill="#1e1e1e">HotpotQA 500</text>
+  <text x="155" y="132" text-anchor="middle" font-size="12" fill="#1e1e1e">immutable · SHA-256 fixed</text>
+
+  <rect x="330" y="84" width="290" height="68" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="475" y="112" text-anchor="middle" font-size="13" fill="#1e1e1e">Retrieval Benchmark</text>
+  <text x="475" y="132" text-anchor="middle" font-size="12" fill="#1e1e1e">Dense BGE+FAISS · BM25 · Hybrid RRF</text>
+
+  <rect x="680" y="84" width="300" height="68" rx="10" fill="#c3fae8" stroke="#0ca678" stroke-width="2"/>
+  <text x="830" y="112" text-anchor="middle" font-size="13" fill="#1e1e1e">Frozen Retrieval Artifacts</text>
+  <text x="830" y="132" text-anchor="middle" font-size="12" fill="#1e1e1e">dense · bm25 · hybrid (.jsonl)</text>
+
+  <line x1="270" y1="118" x2="326" y2="118" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="620" y1="118" x2="676" y2="118" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+
+  <!-- four pipelines -->
+  <rect x="40" y="220" width="250" height="90" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <text x="165" y="258" text-anchor="middle" font-size="15" fill="#1e1e1e">1 · No RAG</text>
+  <text x="165" y="278" text-anchor="middle" font-size="12" fill="#1e1e1e">question → DeepSeek</text>
+
+  <rect x="320" y="220" width="250" height="90" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <text x="445" y="258" text-anchor="middle" font-size="15" fill="#1e1e1e">2 · Standard RAG</text>
+  <text x="445" y="278" text-anchor="middle" font-size="12" fill="#1e1e1e">frozen dense top-5</text>
+
+  <rect x="600" y="220" width="250" height="90" rx="10" fill="#a5d8ff" stroke="#4a9eed" stroke-width="2"/>
+  <text x="725" y="258" text-anchor="middle" font-size="15" fill="#1e1e1e">3 · Hybrid RAG</text>
+  <text x="725" y="278" text-anchor="middle" font-size="12" fill="#1e1e1e">frozen RRF top-5</text>
+
+  <rect x="880" y="220" width="270" height="90" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="1015" y="258" text-anchor="middle" font-size="15" fill="#1e1e1e">4 · Adaptive RAG</text>
+  <text x="1015" y="278" text-anchor="middle" font-size="12" fill="#1e1e1e">frozen hybrid · K=3/5 policy</text>
+
+  <line x1="130" y1="152" x2="163" y2="216" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="700" y1="152" x2="447" y2="216" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="800" y1="152" x2="727" y2="216" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="940" y1="152" x2="1013" y2="216" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+
+  <!-- shared generation -->
+  <rect x="40" y="380" width="200" height="68" rx="10" fill="#fff3bf" stroke="#f59e0b" stroke-width="2"/>
+  <text x="140" y="408" text-anchor="middle" font-size="13" fill="#1e1e1e">src/config.py</text>
+  <text x="140" y="428" text-anchor="middle" font-size="12" fill="#1e1e1e">all frozen constants</text>
+
+  <rect x="250" y="380" width="160" height="68" rx="10" fill="#fff3bf" stroke="#f59e0b" stroke-width="2"/>
+  <text x="330" y="408" text-anchor="middle" font-size="12" fill="#1e1e1e">src/llm.py</text>
+  <text x="330" y="428" text-anchor="middle" font-size="12" fill="#1e1e1e">implements client</text>
+
+  <rect x="430" y="380" width="340" height="68" rx="10" fill="#ffd8a8" stroke="#f59e0b" stroke-width="2"/>
+  <text x="600" y="408" text-anchor="middle" font-size="13" fill="#1e1e1e">DeepSeekClient.generate()</text>
+  <text x="600" y="428" text-anchor="middle" font-size="12" fill="#1e1e1e">thinking · temp 0 · 1 call/question</text>
+
+  <rect x="960" y="380" width="210" height="68" rx="10" fill="#fff3bf" stroke="#f59e0b" stroke-width="2"/>
+  <text x="1065" y="408" text-anchor="middle" font-size="13" fill="#1e1e1e">DeepSeek API</text>
+  <text x="1065" y="428" text-anchor="middle" font-size="12" fill="#1e1e1e">external endpoint</text>
+
+  <line x1="165" y1="310" x2="465" y2="376" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="445" y1="310" x2="540" y2="376" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="725" y1="310" x2="660" y2="376" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="1015" y1="310" x2="770" y2="376" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="770" y1="414" x2="956" y2="414" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#ah2)"/>
+
+  <!-- results + evaluation -->
+  <rect x="40" y="520" width="290" height="76" rx="10" fill="#eebefa" stroke="#ec4899" stroke-width="2"/>
+  <text x="185" y="552" text-anchor="middle" font-size="13" fill="#1e1e1e">Per-pipeline results</text>
+  <text x="185" y="572" text-anchor="middle" font-size="12" fill="#1e1e1e">results/*.jsonl + *.meta.json</text>
+
+  <rect x="380" y="520" width="240" height="76" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+  <text x="500" y="552" text-anchor="middle" font-size="14" fill="#1e1e1e">Answer Eval</text>
+  <text x="500" y="572" text-anchor="middle" font-size="12" fill="#1e1e1e">Exact Match · F1</text>
+
+  <rect x="670" y="520" width="240" height="76" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+  <text x="790" y="552" text-anchor="middle" font-size="14" fill="#1e1e1e">Retrieval Eval</text>
+  <text x="790" y="572" text-anchor="middle" font-size="12" fill="#1e1e1e">Recall@1/3/5/10</text>
+
+  <line x1="520" y1="448" x2="192" y2="516" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="330" y1="558" x2="376" y2="558" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="620" y1="558" x2="666" y2="558" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+
+  <rect x="380" y="660" width="240" height="68" rx="10" fill="#b2f2bb" stroke="#22c55e" stroke-width="2"/>
+  <text x="500" y="688" text-anchor="middle" font-size="13" fill="#1e1e1e">Faithfulness Eval</text>
+  <text x="500" y="708" text-anchor="middle" font-size="12" fill="#1e1e1e">post-hoc LLM judge</text>
+  <line x1="500" y1="596" x2="500" y2="656" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+
+  <!-- analysis + reporting -->
+  <rect x="300" y="780" width="340" height="66" rx="10" fill="#d0bfff" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="470" y="806" text-anchor="middle" font-size="13" fill="#1e1e1e">Cross-pipeline + final analysis</text>
+  <text x="470" y="826" text-anchor="middle" font-size="12" fill="#1e1e1e">paired tests · error taxonomy</text>
+
+  <rect x="720" y="780" width="260" height="66" rx="10" fill="#c3fae8" stroke="#0ca678" stroke-width="2"/>
+  <text x="850" y="818" text-anchor="middle" font-size="13" fill="#1e1e1e">docs/ reports + SVG figures</text>
+
+  <line x1="500" y1="728" x2="474" y2="776" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+  <line x1="640" y1="813" x2="716" y2="813" stroke="#333" stroke-width="2" marker-end="url(#ah2)"/>
+</svg>
