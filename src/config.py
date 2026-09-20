@@ -80,11 +80,18 @@ HYBRID_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "hybrid_retrieval.meta.js
 NO_RAG_RESULTS_FILE = RESULTS_DIR / "no_rag.jsonl"
 NO_RAG_RESULTS_META_FILE = RESULTS_DIR / "no_rag.meta.json"
 
+# Standard Dense RAG baseline: question -> frozen dense retrieval (top-K) ->
+# context -> DeepSeek -> answer. Reuses the frozen dense retrieval artifact.
+STANDARD_RAG_TOP_K = 5
+STANDARD_RAG_RESULTS_FILE = RESULTS_DIR / "standard_rag.jsonl"
+STANDARD_RAG_RESULTS_META_FILE = RESULTS_DIR / "standard_rag.meta.json"
+
 # Frozen generation prompt shared by every pipeline. No-RAG uses exactly this
 # text; RAG pipelines reuse it with a context block appended (see
 # ``src/pipelines/no_rag.py``).
 GENERATION_SYSTEM_PROMPT = (
     "You are a question-answering assistant. Answer the question directly. "
+    "When context documents are supplied, answer using that context. "
     "Return only the final answer, with no explanation unless the answer "
     "itself cannot be identified without it."
 )
@@ -102,7 +109,6 @@ RRF_CONSTANT = float(os.environ.get("RRF_CONSTANT", "60"))
 # BM25 artifacts store top-10), so the fusion candidate set is their union.
 RRF_DEPTH = int(os.environ.get("RRF_DEPTH", str(RETRIEVAL_MAX_K)))
 
-STANDARD_RAG_TOP_K = 5
 HYBRID_RAG_TOP_K = 5
 
 
