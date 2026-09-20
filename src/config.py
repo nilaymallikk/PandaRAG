@@ -76,6 +76,19 @@ BM25_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "bm25_retrieval.meta.json"
 HYBRID_RESULTS_FILE = RESULTS_DIR / "retrieval" / "hybrid_retrieval.jsonl"
 HYBRID_RESULTS_META_FILE = RESULTS_DIR / "retrieval" / "hybrid_retrieval.meta.json"
 
+# No-RAG generation baseline (question -> DeepSeek -> answer, no retrieval).
+NO_RAG_RESULTS_FILE = RESULTS_DIR / "no_rag.jsonl"
+NO_RAG_RESULTS_META_FILE = RESULTS_DIR / "no_rag.meta.json"
+
+# Frozen generation prompt shared by every pipeline. No-RAG uses exactly this
+# text; RAG pipelines reuse it with a context block appended (see
+# ``src/pipelines/no_rag.py``).
+GENERATION_SYSTEM_PROMPT = (
+    "You are a question-answering assistant. Answer the question directly. "
+    "Return only the final answer, with no explanation unless the answer "
+    "itself cannot be identified without it."
+)
+
 # Lexical retrieval (rank_bm25 defaults, kept explicit for the record).
 BM25_K1 = float(os.environ.get("BM25_K1", "1.5"))
 BM25_B = float(os.environ.get("BM25_B", "0.75"))
