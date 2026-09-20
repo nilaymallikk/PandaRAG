@@ -113,6 +113,23 @@ HYBRID_RAG_TOP_K = 5
 HYBRID_RAG_RESULTS_FILE = RESULTS_DIR / "hybrid_rag.jsonl"
 HYBRID_RAG_RESULTS_META_FILE = RESULTS_DIR / "hybrid_rag.meta.json"
 
+# Adaptive RAG (PRE-REGISTERED / FROZEN — do not change after seeing results).
+# Policy: initial K=3 over the frozen hybrid ranking; escalate to K=5 iff
+# confidence < 0.5, where confidence = 0.5*A + 0.5*M.
+#   A = 1 - ((d1 + b1) - 2) / 18            (source agreement, theory range 2..20)
+#   M = (s3 - s4) / W  (pool >= 4 else 0)   (boundary margin, W = 2/61 - 2/70)
+# "confidence" is an ordinal heuristic, NOT a probability.
+ADAPTIVE_RAG_INITIAL_K = 3
+ADAPTIVE_RAG_ALLOWED_FINAL_K = (3, 5)
+ADAPTIVE_RAG_AGREEMENT_WEIGHT = 0.5
+ADAPTIVE_RAG_MARGIN_WEIGHT = 0.5
+ADAPTIVE_RAG_THRESHOLD = 0.5
+ADAPTIVE_RAG_AGREEMENT_RANK_MIN = 2
+ADAPTIVE_RAG_AGREEMENT_RANK_MAX = 20
+ADAPTIVE_RAG_MARGIN_NORMALIZER_W = (2.0 / 61.0) - (2.0 / 70.0)
+ADAPTIVE_RAG_RESULTS_FILE = RESULTS_DIR / "adaptive_rag.jsonl"
+ADAPTIVE_RAG_RESULTS_META_FILE = RESULTS_DIR / "adaptive_rag.meta.json"
+
 
 # ---------------------------------------------------------------------------
 # DeepSeek LLM
