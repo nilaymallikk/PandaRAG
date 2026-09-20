@@ -110,6 +110,8 @@ RRF_CONSTANT = float(os.environ.get("RRF_CONSTANT", "60"))
 RRF_DEPTH = int(os.environ.get("RRF_DEPTH", str(RETRIEVAL_MAX_K)))
 
 HYBRID_RAG_TOP_K = 5
+HYBRID_RAG_RESULTS_FILE = RESULTS_DIR / "hybrid_rag.jsonl"
+HYBRID_RAG_RESULTS_META_FILE = RESULTS_DIR / "hybrid_rag.meta.json"
 
 
 # ---------------------------------------------------------------------------
