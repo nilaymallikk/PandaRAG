@@ -252,6 +252,7 @@ class DeepSeekClient:
             api_key=config.DEEPSEEK_API_KEY,
             base_url=config.DEEPSEEK_BASE_URL,
             timeout=config.REQUEST_TIMEOUT_SECONDS,
+            default_headers=dict(config.LLM_EXTRA_HEADERS),
             max_retries=0,  # retries happen here so they can be logged and counted
         )
 

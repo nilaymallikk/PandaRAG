@@ -145,10 +145,11 @@ DEEPSEEK_MODEL_VERSION = "DeepSeek-V4.1-Flash"
 # The DeepSeek API accepts model *ids*, not version names. As of the official
 # docs, ``deepseek-flash`` serves the DeepSeek-V4.1-Flash model version, so the
 # version string that appears in .env / AGENTS.md is mapped to its id here.
-VALID_MODEL_IDS = ("deepseek-flash", "deepseek-v4-pro")
+VALID_MODEL_IDS = ("deepseek-flash", "deepseek-v4-pro", "deepseek-v4.1-flash")
 MODEL_ID_ALIASES = {
     "deepseek-flash": "deepseek-flash",
-    "deepseek-v4.1-flash": "deepseek-flash",
+    # OpenCode Go gateway model id (serves the same DeepSeek-V4.1-Flash model).
+    "deepseek-v4.1-flash": "deepseek-v4.1-flash",
     "deepseek_v4.1-flash": "deepseek-flash",
     "deepseek-v4-flash": "deepseek-flash",
     "deepseek-v4-pro": "deepseek-v4-pro",
@@ -190,6 +191,11 @@ MAX_OUTPUT_TOKENS = int(os.environ.get("DEEPSEEK_MAX_OUTPUT_TOKENS", "2048"))
 # Temperature only has an effect in non-thinking mode (the API ignores it while
 # thinking mode is enabled). Kept at 0 for reproducibility.
 TEMPERATURE = float(os.environ.get("DEEPSEEK_TEMPERATURE", "0"))
+
+# The OpenCode Go gateway routes by session and rejects requests without this
+# header ("MissingSessionID").
+LLM_SESSION_ID = os.environ.get("LLM_SESSION_ID", "adaptive-rag-research").strip()
+LLM_EXTRA_HEADERS = {"x-opencode-session": LLM_SESSION_ID or "adaptive-rag-research"}
 
 MAX_RETRIES = int(os.environ.get("DEEPSEEK_MAX_RETRIES", "4"))
 RETRY_BACKOFF_SECONDS = float(os.environ.get("DEEPSEEK_RETRY_BACKOFF", "2"))
@@ -234,6 +240,10 @@ PRICING_USD_PER_1M_TOKENS = {
         },
     },
 }
+
+# The OpenCode Go gateway publishes the same rates (and the same 2x peak
+# multipliers) for its own model id, so it reuses this table.
+PRICING_USD_PER_1M_TOKENS["deepseek-v4.1-flash"] = PRICING_USD_PER_1M_TOKENS["deepseek-flash"]
 
 # Peak hours are 01:00-04:00 and 06:00-10:00 UTC, Monday-Friday, excluding
 # Chinese public holidays. Every other hour is off-peak at half the peak rate.
@@ -307,6 +317,7 @@ def describe(timestamp: datetime | None = None) -> dict[str, object]:
         "llm_provider": "DeepSeek",
         "llm_base_url": DEEPSEEK_BASE_URL,
         "llm_model_id": DEEPSEEK_MODEL,
+        "llm_session_id": LLM_SESSION_ID,
         "llm_model_version": DEEPSEEK_MODEL_VERSION,
         "llm_thinking": DEEPSEEK_THINKING,
         "llm_reasoning_effort": DEEPSEEK_REASONING_EFFORT or "api_default",
