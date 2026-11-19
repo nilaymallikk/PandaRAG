@@ -45,6 +45,10 @@ REQUIRED_FIELDS = (
     "context",
 )
 
+# Known optional fields: present in the 2Wiki/MuSiQue files, absent from the
+# frozen HotpotQA file. Their presence is expected, not a warning.
+OPTIONAL_FIELDS = ("hops",)
+
 
 @dataclass(frozen=True)
 class HotpotExample:
@@ -193,7 +197,7 @@ def validate_records(
         if missing:
             errors.append(f"record {position}: missing fields {missing}")
             continue
-        extra = sorted(set(record) - set(REQUIRED_FIELDS))
+        extra = sorted(set(record) - set(REQUIRED_FIELDS) - set(OPTIONAL_FIELDS))
         if extra:
             warnings.append(f"record {position}: unexpected fields {extra}")
 
@@ -263,7 +267,9 @@ def validate_records(
                 errors.append(f"record {position}: supporting title {title!r} not in context")
                 continue
             paragraph = sentences[titles.index(title)]
-            if not isinstance(sent_id, int) or not 0 <= sent_id < len(paragraph):
+            # sent_id == -1 means paragraph-level gold support (MuSiQue marks
+            # ``is_supporting`` per paragraph, not per sentence).
+            if sent_id != -1 and (not isinstance(sent_id, int) or not 0 <= sent_id < len(paragraph)):
                 errors.append(f"record {position}: sent_id {sent_id!r} out of range for {title!r}")
 
     if len(set(ids)) != len(ids):

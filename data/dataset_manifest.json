@@ -1,0 +1,89 @@
+{
+  "generated_utc": "2026-10-07T01:24:22.201518+00:00",
+  "generator": "python -m src.download_datasets",
+  "selection": {
+    "rule": "seeded shuffle (random.Random(seed)) over the full split, then first N",
+    "seed": 42,
+    "limit": 500
+  },
+  "note": "type = dataset-native label only. Fact/Definition/Reasoning is classifier output -> data/semantic_types_<dataset>.json (never merged into these files).",
+  "datasets": {
+    "hotpotqa": {
+      "file": "data/hotpotqa_500.json",
+      "sha256": "956405ceb43d73385d60898e1bfc7f45a8184c9a4e1eff45b9a8ec239acfd048",
+      "status": "frozen (verified, not modified by this script)",
+      "source": {
+        "origin": "HuggingFace hotpotqa/hotpot_qa, config=distractor, split=validation",
+        "selection": "pre-existing frozen file (all 500 level=hard, all 2-hop); initial commit 0e50e12"
+      },
+      "support_granularity": "sentence",
+      "hops_field": "derived at load time (len of distinct supporting_facts titles)",
+      "semantic_type": "see data/semantic_types_hotpotqa.json (produced by src/classifier.py)",
+      "n": 500,
+      "hops_histogram": {
+        "2": 500
+      },
+      "type_histogram": {
+        "bridge": 400,
+        "comparison": 100
+      },
+      "mean_gold_supports": 2.424,
+      "mean_context_paragraphs": 9.912
+    },
+    "2wiki": {
+      "file": "data/2wiki_500.json",
+      "sha256": "658de4da7eb7e8db22bb2e07ff66f555d3e65490e1d327c18e3d1db77974b4e0",
+      "status": "generated",
+      "source": {
+        "origin": "official 2WikiMultiHopQA v1.1 (Alab-NII/2wikimultihop), dev.json",
+        "url": "https://www.dropbox.com/s/ms2m13252h6xubs/data_ids_april7.zip?dl=1",
+        "filter": "exactly 2 distinct supporting paragraphs (paper Table 1: 2Wiki hops = 2) AND resolvable gold evidence (unique context titles, sent_id in range)",
+        "license": "see github.com/Alab-NII/2wikimultihop LICENSE; HF mirror xanhho/2WikiMultihopQA is cc-by-sa-4.0",
+        "source_questions": 12576,
+        "after_hops_filter": 9825,
+        "after_quality_filter": 9370,
+        "dropped_unresolvable_gold": 455,
+        "dev_json_sha256": "79f77ae104088ea8e25b1a65dbece768d45771194663bc5660ec9a98070dadf5"
+      },
+      "support_granularity": "sentence",
+      "semantic_type": "see data/semantic_types_2wiki.json (produced by src/classifier.py)",
+      "n": 500,
+      "hops_histogram": {
+        "2": 500
+      },
+      "type_histogram": {
+        "comparison": 158,
+        "compositional": 253,
+        "inference": 89
+      },
+      "mean_gold_supports": 2.0,
+      "mean_context_paragraphs": 10.0
+    },
+    "musique": {
+      "file": "data/musique_500.json",
+      "sha256": "79f5aefa5a2a286fe1d3c2bd7194ba7d18c64c161adeeca0ed0e50b2e28eb5a5",
+      "status": "generated",
+      "source": {
+        "origin": "HuggingFace dgslibisey/MuSiQue, config=default, split=validation",
+        "filter": "answerable == True (all 2,417 validation questions are answerable)",
+        "license": "CC-BY-4.0",
+        "source_questions": 2417
+      },
+      "support_granularity": "paragraph (sent_id = -1; dataset marks is_supporting per paragraph)",
+      "title_disambiguation": "duplicate paragraph titles get ' (n)' suffix in paragraph order (lossless; gold support is paragraph-level)",
+      "sentence_splitter": "regex (?<=[.!?])\\s+",
+      "semantic_type": "see data/semantic_types_musique.json (produced by src/classifier.py)",
+      "n": 500,
+      "hops_histogram": {
+        "2": 263,
+        "3": 152,
+        "4": 85
+      },
+      "type_histogram": {
+        "multihop": 500
+      },
+      "mean_gold_supports": 2.644,
+      "mean_context_paragraphs": 19.992
+    }
+  }
+}
