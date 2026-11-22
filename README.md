@@ -51,9 +51,9 @@ on identical question ids (pooled, n = 1,500 per comparison).
 
 - **Retrieval is essential**: F1 0.548 with dense retrieval vs 0.308 without (EM 0.433 vs 0.222).
 - **Type-specific retrieval + BGE reranking is the real gain**: P4 vs P1c is ΔF1 **+0.035**
-  [0.020, 0.049], McNemar p = 0.0006 (n = 1,500 paired), EM +0.026.
+  [0.020, 0.049], McNemar p = 0.0006 (n = 1,500 paired), EM +0.027.
 - **Compression is a grounding tool, not a cost saving**: the generation prompt shrinks from
-  1,576 to 94 tokens (−94%) but the extra call raises total tokens 14% and cost 21%; quality is
+  1,576 to 94 tokens (−94%) but the extra call raises input tokens 14% (total tokens 22%) and cost 21%; quality is
   unchanged (ΔF1 −0.008, p = 0.43) and faithfulness improves 0.63 → 0.67.
 - **Candidate recall is not consumed evidence**: pipelines that retrieve 10 and feed 5 lose 5–12
   points (P2c10 0.775 → 0.705; P3c 0.775 → 0.654). The `R@ctx` column is what the generator saw.
@@ -259,7 +259,7 @@ Frozen retriever quality (document Recall@K, no LLM):
 ### What the results support
 
 - **Retrieval is essential for bridge questions.** Adaptive beats No-RAG 106–41 (McNemar p ≈ 8e-08)
-  and 100–19 on bridge questions (p ≈ 2e-14).
+  and 100–19 on bridge questions (p ≈ 1.8e-14).
 - **Adaptive matches Hybrid quality at roughly half the cost**: EM 0.4820 vs 0.4900 (p = 0.585;
   F1 CI includes zero), tokens −28.2%, cost −46.8%.
 - **Standard dense RAG is the most accurate single pipeline** (EM 0.5100); its edge over Adaptive is
