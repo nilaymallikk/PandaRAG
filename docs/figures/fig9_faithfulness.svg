@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="580" viewBox="0 0 1000 580" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+<rect width="1000" height="580" fill="#ffffff"/>
+<text x="78" y="32" font-size="18" font-weight="600" fill="#111827">Grounding: faithfulness and hallucination score</text>
+<line x1="193.3" y1="84" x2="193.3" y2="479" stroke="#e5e7eb" stroke-width="1"/>
+<text x="193.3" y="495" font-size="10" fill="#6b7280" text-anchor="middle">0.00</text>
+<line x1="450.2" y1="84" x2="450.2" y2="479" stroke="#e5e7eb" stroke-width="1"/>
+<text x="450.2" y="495" font-size="10" fill="#6b7280" text-anchor="middle">0.25</text>
+<line x1="707.1" y1="84" x2="707.1" y2="479" stroke="#e5e7eb" stroke-width="1"/>
+<text x="707.1" y="495" font-size="10" fill="#6b7280" text-anchor="middle">0.50</text>
+<line x1="964.0" y1="84" x2="964.0" y2="479" stroke="#e5e7eb" stroke-width="1"/>
+<text x="964.0" y="495" font-size="10" fill="#6b7280" text-anchor="middle">0.75</text>
+<text x="183.3" y="116.2" font-size="11" fill="#111827" text-anchor="end">Dense RAG (corpus)</text>
+<rect x="193.3" y="99.2" width="623.0" height="11.2" rx="1.5" fill="#059669"/>
+<text x="822.3" y="108.6" font-size="9.5" fill="#6b7280">0.61</text>
+<rect x="193.3" y="112.2" width="404.6" height="11.2" rx="1.5" fill="#dc2626"/>
+<text x="603.9" y="121.6" font-size="9.5" fill="#6b7280">0.39</text>
+<text x="183.3" y="172.6" font-size="11" fill="#111827" text-anchor="end">Naive RAG (paper 10-&gt;5)</text>
+<rect x="193.3" y="155.6" width="623.0" height="11.2" rx="1.5" fill="#059669"/>
+<text x="822.3" y="165.0" font-size="9.5" fill="#6b7280">0.61</text>
+<rect x="193.3" y="168.6" width="404.6" height="11.2" rx="1.5" fill="#dc2626"/>
+<text x="603.9" y="178.0" font-size="9.5" fill="#6b7280">0.39</text>
+<text x="183.3" y="229.1" font-size="11" fill="#111827" text-anchor="end">Hybrid RAG (fusion depth 5)</text>
+<rect x="193.3" y="212.1" width="592.8" height="11.2" rx="1.5" fill="#059669"/>
+<text x="792.1" y="221.4" font-size="9.5" fill="#6b7280">0.58</text>
+<rect x="193.3" y="225.1" width="434.8" height="11.2" rx="1.5" fill="#dc2626"/>
+<text x="634.1" y="234.4" font-size="9.5" fill="#6b7280">0.42</text>
+<text x="183.3" y="285.5" font-size="11" fill="#111827" text-anchor="end">Adaptive RAG (transferred)</text>
+<rect x="193.3" y="268.5" width="597.8" height="11.2" rx="1.5" fill="#059669"/>
+<text x="797.2" y="277.9" font-size="9.5" fill="#6b7280">0.58</text>
+<rect x="193.3" y="281.5" width="429.7" height="11.2" rx="1.5" fill="#dc2626"/>
+<text x="629.1" y="290.9" font-size="9.5" fill="#6b7280">0.42</text>
+<text x="183.3" y="341.9" font-size="11" fill="#111827" text-anchor="end">SAC-RAG Adaptive</text>
+<rect x="193.3" y="324.9" width="642.7" height="11.2" rx="1.5" fill="#059669"/>
+<text x="842.1" y="334.3" font-size="9.5" fill="#6b7280">0.63</text>
+<rect x="193.3" y="337.9" width="384.8" height="11.2" rx="1.5" fill="#dc2626"/>
+<text x="584.1" y="347.3" font-size="9.5" fill="#6b7280">0.37</text>
+<text x="183.3" y="398.4" font-size="11" fill="#111827" text-anchor="end">Full SAC-RAG</text>
+<rect x="193.3" y="381.4" width="684.6" height="11.2" rx="1.5" fill="#059669"/>
+<text x="883.9" y="390.7" font-size="9.5" fill="#6b7280">0.67</text>
+<rect x="193.3" y="394.4" width="343.0" height="11.2" rx="1.5" fill="#dc2626"/>
+<text x="542.3" y="403.7" font-size="9.5" fill="#6b7280">0.33</text>
+<text x="183.3" y="454.8" font-size="11" fill="#111827" text-anchor="end">PandaRAG</text>
+<rect x="193.3" y="437.8" width="642.7" height="11.2" rx="1.5" fill="#059669"/>
+<text x="842.1" y="447.1" font-size="9.5" fill="#6b7280">0.63</text>
+<rect x="193.3" y="450.8" width="384.8" height="11.2" rx="1.5" fill="#dc2626"/>
+<text x="584.1" y="460.1" font-size="9.5" fill="#6b7280">0.37</text>
+<text x="579" y="509" font-size="11.5" fill="#6b7280" text-anchor="middle">score</text>
+<rect x="193.3" y="523.0" width="12.0" height="12.0" rx="3" fill="#059669"/>
+<text x="210.3" y="533.0" font-size="11.0" fill="#111827">faithfulness</text>
+<rect x="304.2" y="523.0" width="12.0" height="12.0" rx="3" fill="#dc2626"/>
+<text x="321.2" y="533.0" font-size="11.0" fill="#111827">hallucination</text>
+</svg>

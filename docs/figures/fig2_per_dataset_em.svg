@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="580" viewBox="0 0 1000 580" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+<rect width="1000" height="580" fill="#ffffff"/>
+<text x="78" y="32" font-size="18" font-weight="600" fill="#111827">Exact Match by dataset</text>
+<text x="20" y="262" font-size="12" fill="#6b7280" transform="rotate(-90 20 262)">EM</text>
+<line x1="78" y1="440.0" x2="964" y2="440.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="444.0" font-size="11" fill="#6b7280" text-anchor="end">0.00</text>
+<line x1="78" y1="368.8" x2="964" y2="368.8" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="372.8" font-size="11" fill="#6b7280" text-anchor="end">0.15</text>
+<line x1="78" y1="297.6" x2="964" y2="297.6" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="301.6" font-size="11" fill="#6b7280" text-anchor="end">0.30</text>
+<line x1="78" y1="226.4" x2="964" y2="226.4" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="230.4" font-size="11" fill="#6b7280" text-anchor="end">0.45</text>
+<line x1="78" y1="155.2" x2="964" y2="155.2" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="159.2" font-size="11" fill="#6b7280" text-anchor="end">0.60</text>
+<line x1="78" y1="84.0" x2="964" y2="84.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="88.0" font-size="11" fill="#6b7280" text-anchor="end">0.75</text>
+<rect x="110.5" y="309.2" width="22.5" height="180.8" rx="1.5" fill="#6b7280"/>
+<text x="121.7" y="305.2" font-size="8.5" fill="#6b7280" text-anchor="middle">0.33</text>
+<rect x="136.1" y="179.3" width="22.5" height="310.7" rx="1.5" fill="#2563eb"/>
+<text x="147.3" y="175.3" font-size="8.5" fill="#6b7280" text-anchor="middle">0.57</text>
+<rect x="161.7" y="194.4" width="22.5" height="295.6" rx="1.5" fill="#0891b2"/>
+<text x="172.9" y="190.4" font-size="8.5" fill="#6b7280" text-anchor="middle">0.55</text>
+<rect x="187.3" y="187.9" width="22.5" height="302.1" rx="1.5" fill="#0e7490"/>
+<text x="198.5" y="183.9" font-size="8.5" fill="#6b7280" text-anchor="middle">0.56</text>
+<rect x="212.9" y="199.8" width="22.5" height="290.2" rx="1.5" fill="#059669"/>
+<text x="224.1" y="195.8" font-size="8.5" fill="#6b7280" text-anchor="middle">0.54</text>
+<rect x="238.5" y="179.3" width="22.5" height="310.7" rx="1.5" fill="#93c5fd"/>
+<text x="249.7" y="175.3" font-size="8.5" fill="#6b7280" text-anchor="middle">0.57</text>
+<rect x="264.1" y="162.0" width="22.5" height="328.0" rx="1.5" fill="#f59e0b"/>
+<text x="275.3" y="158.0" font-size="8.5" fill="#6b7280" text-anchor="middle">0.61</text>
+<rect x="289.7" y="159.8" width="22.5" height="330.2" rx="1.5" fill="#b45309"/>
+<text x="300.9" y="155.8" font-size="8.5" fill="#6b7280" text-anchor="middle">0.61</text>
+<rect x="315.3" y="162.0" width="22.5" height="328.0" rx="1.5" fill="#7c3aed"/>
+<text x="326.5" y="158.0" font-size="8.5" fill="#6b7280" text-anchor="middle">0.61</text>
+<rect x="405.8" y="353.6" width="22.5" height="136.4" rx="1.5" fill="#6b7280"/>
+<text x="417.1" y="349.6" font-size="8.5" fill="#6b7280" text-anchor="middle">0.25</text>
+<rect x="431.4" y="213.9" width="22.5" height="276.1" rx="1.5" fill="#2563eb"/>
+<text x="442.7" y="209.9" font-size="8.5" fill="#6b7280" text-anchor="middle">0.51</text>
+<rect x="457.0" y="225.8" width="22.5" height="264.2" rx="1.5" fill="#0891b2"/>
+<text x="468.3" y="221.8" font-size="8.5" fill="#6b7280" text-anchor="middle">0.49</text>
+<rect x="482.6" y="224.7" width="22.5" height="265.3" rx="1.5" fill="#0e7490"/>
+<text x="493.9" y="220.7" font-size="8.5" fill="#6b7280" text-anchor="middle">0.49</text>
+<rect x="508.2" y="251.8" width="22.5" height="238.2" rx="1.5" fill="#059669"/>
+<text x="519.5" y="247.8" font-size="8.5" fill="#6b7280" text-anchor="middle">0.44</text>
+<rect x="533.8" y="213.9" width="22.5" height="276.1" rx="1.5" fill="#93c5fd"/>
+<text x="545.1" y="209.9" font-size="8.5" fill="#6b7280" text-anchor="middle">0.51</text>
+<rect x="559.4" y="199.8" width="22.5" height="290.2" rx="1.5" fill="#f59e0b"/>
+<text x="570.7" y="195.8" font-size="8.5" fill="#6b7280" text-anchor="middle">0.54</text>
+<rect x="585.0" y="213.9" width="22.5" height="276.1" rx="1.5" fill="#b45309"/>
+<text x="596.3" y="209.9" font-size="8.5" fill="#6b7280" text-anchor="middle">0.51</text>
+<rect x="610.6" y="200.9" width="22.5" height="289.1" rx="1.5" fill="#7c3aed"/>
+<text x="621.8" y="196.9" font-size="8.5" fill="#6b7280" text-anchor="middle">0.53</text>
+<rect x="701.2" y="446.7" width="22.5" height="43.3" rx="1.5" fill="#6b7280"/>
+<text x="712.4" y="442.7" font-size="8.5" fill="#6b7280" text-anchor="middle">0.08</text>
+<rect x="726.7" y="374.2" width="22.5" height="115.8" rx="1.5" fill="#2563eb"/>
+<text x="738.0" y="370.2" font-size="8.5" fill="#6b7280" text-anchor="middle">0.21</text>
+<rect x="752.3" y="374.2" width="22.5" height="115.8" rx="1.5" fill="#0891b2"/>
+<text x="763.6" y="370.2" font-size="8.5" fill="#6b7280" text-anchor="middle">0.21</text>
+<rect x="777.9" y="372.0" width="22.5" height="118.0" rx="1.5" fill="#0e7490"/>
+<text x="789.2" y="368.0" font-size="8.5" fill="#6b7280" text-anchor="middle">0.22</text>
+<rect x="803.5" y="381.7" width="22.5" height="108.3" rx="1.5" fill="#059669"/>
+<text x="814.8" y="377.7" font-size="8.5" fill="#6b7280" text-anchor="middle">0.20</text>
+<rect x="829.1" y="374.2" width="22.5" height="115.8" rx="1.5" fill="#93c5fd"/>
+<text x="840.4" y="370.2" font-size="8.5" fill="#6b7280" text-anchor="middle">0.21</text>
+<rect x="854.7" y="362.2" width="22.5" height="127.8" rx="1.5" fill="#f59e0b"/>
+<text x="866.0" y="358.2" font-size="8.5" fill="#6b7280" text-anchor="middle">0.24</text>
+<rect x="880.3" y="360.1" width="22.5" height="129.9" rx="1.5" fill="#b45309"/>
+<text x="891.6" y="356.1" font-size="8.5" fill="#6b7280" text-anchor="middle">0.24</text>
+<rect x="905.9" y="362.2" width="22.5" height="127.8" rx="1.5" fill="#7c3aed"/>
+<text x="917.2" y="358.2" font-size="8.5" fill="#6b7280" text-anchor="middle">0.24</text>
+<text x="225.7" y="511.0" font-size="11.0" fill="#111827" text-anchor="middle">hotpotqa</text>
+<text x="521.0" y="511.0" font-size="11.0" fill="#111827" text-anchor="middle">2wiki</text>
+<text x="816.3" y="511.0" font-size="11.0" fill="#111827" text-anchor="middle">musique</text>
+<rect x="78.0" y="526.0" width="12.0" height="12.0" rx="3" fill="#6b7280"/>
+<text x="95.0" y="536.0" font-size="11.0" fill="#111827">No-RAG</text>
+<rect x="152.0" y="526.0" width="12.0" height="12.0" rx="3" fill="#2563eb"/>
+<text x="169.0" y="536.0" font-size="11.0" fill="#111827">Dense RAG (corpus)</text>
+<rect x="299.8" y="526.0" width="12.0" height="12.0" rx="3" fill="#0891b2"/>
+<text x="316.8" y="536.0" font-size="11.0" fill="#111827">Hybrid RAG (fusion depth 5)</text>
+<rect x="503.2" y="526.0" width="12.0" height="12.0" rx="3" fill="#0e7490"/>
+<text x="520.2" y="536.0" font-size="11.0" fill="#111827">Hybrid RAG (fusion depth 10)</text>
+<rect x="712.6" y="526.0" width="12.0" height="12.0" rx="3" fill="#059669"/>
+<text x="729.6" y="536.0" font-size="11.0" fill="#111827">Adaptive RAG (transferred)</text>
+<rect x="78.0" y="543.0" width="12.0" height="12.0" rx="3" fill="#93c5fd"/>
+<text x="95.0" y="553.0" font-size="11.0" fill="#111827">Naive RAG (paper 10-&gt;5)</text>
+<rect x="256.7" y="543.0" width="12.0" height="12.0" rx="3" fill="#f59e0b"/>
+<text x="273.7" y="553.0" font-size="11.0" fill="#111827">SAC-RAG Adaptive</text>
+<rect x="392.2" y="543.0" width="12.0" height="12.0" rx="3" fill="#b45309"/>
+<text x="409.2" y="553.0" font-size="11.0" fill="#111827">Full SAC-RAG</text>
+<rect x="503.2" y="543.0" width="12.0" height="12.0" rx="3" fill="#7c3aed"/>
+<text x="520.2" y="553.0" font-size="11.0" fill="#111827">PandaRAG</text>
+</svg>

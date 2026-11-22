@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="580" viewBox="0 0 1000 580" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+<rect width="1000" height="580" fill="#ffffff"/>
+<text x="78" y="32" font-size="18" font-weight="600" fill="#111827">All-gold-evidence coverage@K (every gold document retrieved)</text>
+<text x="20" y="262" font-size="12" fill="#6b7280" transform="rotate(-90 20 262)">all-gold coverage</text>
+<line x1="78" y1="440.0" x2="964" y2="440.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="444.0" font-size="11" fill="#6b7280" text-anchor="end">0.00</text>
+<line x1="78" y1="368.8" x2="964" y2="368.8" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="372.8" font-size="11" fill="#6b7280" text-anchor="end">0.15</text>
+<line x1="78" y1="297.6" x2="964" y2="297.6" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="301.6" font-size="11" fill="#6b7280" text-anchor="end">0.30</text>
+<line x1="78" y1="226.4" x2="964" y2="226.4" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="230.4" font-size="11" fill="#6b7280" text-anchor="end">0.45</text>
+<line x1="78" y1="155.2" x2="964" y2="155.2" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="159.2" font-size="11" fill="#6b7280" text-anchor="end">0.60</text>
+<line x1="78" y1="84.0" x2="964" y2="84.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="88.0" font-size="11" fill="#6b7280" text-anchor="end">0.75</text>
+<polyline points="78.0,490.0 299.5,266.3 521.0,218.6" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<circle cx="78.0" cy="490.0" r="3.6" fill="#2563eb"/>
+<circle cx="299.5" cy="266.3" r="3.6" fill="#2563eb"/>
+<circle cx="521.0" cy="218.6" r="3.6" fill="#2563eb"/>
+<polyline points="78.0,490.0 299.5,291.5 521.0,229.5" fill="none" stroke="#0891b2" stroke-width="2.4"/>
+<circle cx="78.0" cy="490.0" r="3.6" fill="#0891b2"/>
+<circle cx="299.5" cy="291.5" r="3.6" fill="#0891b2"/>
+<circle cx="521.0" cy="229.5" r="3.6" fill="#0891b2"/>
+<polyline points="78.0,490.0 299.5,294.0 521.0,235.2 742.5,194.1 964.0,180.4" fill="none" stroke="#0e7490" stroke-width="2.4"/>
+<circle cx="78.0" cy="490.0" r="3.6" fill="#0e7490"/>
+<circle cx="299.5" cy="294.0" r="3.6" fill="#0e7490"/>
+<circle cx="521.0" cy="235.2" r="3.6" fill="#0e7490"/>
+<circle cx="742.5" cy="194.1" r="3.6" fill="#0e7490"/>
+<circle cx="964.0" cy="180.4" r="3.6" fill="#0e7490"/>
+<polyline points="78.0,490.0 299.5,294.0 521.0,235.2 742.5,194.1 964.0,180.4" fill="none" stroke="#059669" stroke-width="2.4"/>
+<circle cx="78.0" cy="490.0" r="3.6" fill="#059669"/>
+<circle cx="299.5" cy="294.0" r="3.6" fill="#059669"/>
+<circle cx="521.0" cy="235.2" r="3.6" fill="#059669"/>
+<circle cx="742.5" cy="194.1" r="3.6" fill="#059669"/>
+<circle cx="964.0" cy="180.4" r="3.6" fill="#059669"/>
+<polyline points="78.0,490.0 299.5,266.3 521.0,218.6 742.5,192.6 964.0,181.1" fill="none" stroke="#93c5fd" stroke-width="2.4"/>
+<circle cx="78.0" cy="490.0" r="3.6" fill="#93c5fd"/>
+<circle cx="299.5" cy="266.3" r="3.6" fill="#93c5fd"/>
+<circle cx="521.0" cy="218.6" r="3.6" fill="#93c5fd"/>
+<circle cx="742.5" cy="192.6" r="3.6" fill="#93c5fd"/>
+<circle cx="964.0" cy="181.1" r="3.6" fill="#93c5fd"/>
+<polyline points="78.0,490.0 299.5,248.9 521.0,215.4 742.5,180.7 964.0,171.8" fill="none" stroke="#f59e0b" stroke-width="2.4"/>
+<circle cx="78.0" cy="490.0" r="3.6" fill="#f59e0b"/>
+<circle cx="299.5" cy="248.9" r="3.6" fill="#f59e0b"/>
+<circle cx="521.0" cy="215.4" r="3.6" fill="#f59e0b"/>
+<circle cx="742.5" cy="180.7" r="3.6" fill="#f59e0b"/>
+<circle cx="964.0" cy="171.8" r="3.6" fill="#f59e0b"/>
+<polyline points="78.0,490.0 299.5,248.9 521.0,215.4 742.5,180.7 964.0,171.8" fill="none" stroke="#b45309" stroke-width="2.4"/>
+<circle cx="78.0" cy="490.0" r="3.6" fill="#b45309"/>
+<circle cx="299.5" cy="248.9" r="3.6" fill="#b45309"/>
+<circle cx="521.0" cy="215.4" r="3.6" fill="#b45309"/>
+<circle cx="742.5" cy="180.7" r="3.6" fill="#b45309"/>
+<circle cx="964.0" cy="171.8" r="3.6" fill="#b45309"/>
+<polyline points="78.0,490.0 299.5,248.9 521.0,215.7 742.5,181.1 964.0,172.7" fill="none" stroke="#7c3aed" stroke-width="2.4"/>
+<circle cx="78.0" cy="490.0" r="3.6" fill="#7c3aed"/>
+<circle cx="299.5" cy="248.9" r="3.6" fill="#7c3aed"/>
+<circle cx="521.0" cy="215.7" r="3.6" fill="#7c3aed"/>
+<circle cx="742.5" cy="181.1" r="3.6" fill="#7c3aed"/>
+<circle cx="964.0" cy="172.7" r="3.6" fill="#7c3aed"/>
+<text x="78.0" y="510.0" font-size="11" fill="#111827" text-anchor="middle">K=1</text>
+<text x="299.5" y="510.0" font-size="11" fill="#111827" text-anchor="middle">K=3</text>
+<text x="521.0" y="510.0" font-size="11" fill="#111827" text-anchor="middle">K=5</text>
+<text x="742.5" y="510.0" font-size="11" fill="#111827" text-anchor="middle">K=8</text>
+<text x="964.0" y="510.0" font-size="11" fill="#111827" text-anchor="middle">K=10</text>
+<rect x="78.0" y="528.0" width="12.0" height="12.0" rx="3" fill="#2563eb"/>
+<text x="95.0" y="538.0" font-size="11.0" fill="#111827">Dense RAG (corpus)</text>
+<rect x="225.9" y="528.0" width="12.0" height="12.0" rx="3" fill="#0891b2"/>
+<text x="242.9" y="538.0" font-size="11.0" fill="#111827">Hybrid RAG (fusion depth 5)</text>
+<rect x="429.2" y="528.0" width="12.0" height="12.0" rx="3" fill="#0e7490"/>
+<text x="446.2" y="538.0" font-size="11.0" fill="#111827">Hybrid RAG (fusion depth 10)</text>
+<rect x="638.7" y="528.0" width="12.0" height="12.0" rx="3" fill="#059669"/>
+<text x="655.7" y="538.0" font-size="11.0" fill="#111827">Adaptive RAG (transferred)</text>
+<rect x="78.0" y="545.0" width="12.0" height="12.0" rx="3" fill="#93c5fd"/>
+<text x="95.0" y="555.0" font-size="11.0" fill="#111827">Naive RAG (paper 10-&gt;5)</text>
+<rect x="256.7" y="545.0" width="12.0" height="12.0" rx="3" fill="#f59e0b"/>
+<text x="273.7" y="555.0" font-size="11.0" fill="#111827">SAC-RAG Adaptive</text>
+<rect x="392.2" y="545.0" width="12.0" height="12.0" rx="3" fill="#b45309"/>
+<text x="409.2" y="555.0" font-size="11.0" fill="#111827">Full SAC-RAG</text>
+<rect x="503.2" y="545.0" width="12.0" height="12.0" rx="3" fill="#7c3aed"/>
+<text x="520.2" y="555.0" font-size="11.0" fill="#111827">PandaRAG</text>
+</svg>

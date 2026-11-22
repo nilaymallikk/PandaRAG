@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="580" viewBox="0 0 1000 580" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+<rect width="1000" height="580" fill="#ffffff"/>
+<text x="78" y="32" font-size="18" font-weight="600" fill="#111827">PandaRAG evidence coverage before and after recovery rounds</text>
+<text x="20" y="262" font-size="12" fill="#6b7280" transform="rotate(-90 20 262)">coverage</text>
+<line x1="78" y1="440.0" x2="964" y2="440.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="444.0" font-size="11" fill="#6b7280" text-anchor="end">0.00</text>
+<line x1="78" y1="368.8" x2="964" y2="368.8" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="372.8" font-size="11" fill="#6b7280" text-anchor="end">0.20</text>
+<line x1="78" y1="297.6" x2="964" y2="297.6" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="301.6" font-size="11" fill="#6b7280" text-anchor="end">0.40</text>
+<line x1="78" y1="226.4" x2="964" y2="226.4" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="230.4" font-size="11" fill="#6b7280" text-anchor="end">0.60</text>
+<line x1="78" y1="155.2" x2="964" y2="155.2" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="159.2" font-size="11" fill="#6b7280" text-anchor="end">0.80</text>
+<line x1="78" y1="84.0" x2="964" y2="84.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="70" y="88.0" font-size="11" fill="#6b7280" text-anchor="end">1.00</text>
+<rect x="110.5" y="184.3" width="67.6" height="322.7" rx="1.5" fill="#c4b5fd"/>
+<text x="144.3" y="180.3" font-size="8.5" fill="#6b7280" text-anchor="middle">0.76</text>
+<rect x="187.3" y="183.1" width="67.6" height="323.9" rx="1.5" fill="#7c3aed"/>
+<text x="221.1" y="179.1" font-size="8.5" fill="#6b7280" text-anchor="middle">0.77</text>
+<rect x="264.1" y="260.8" width="67.6" height="246.2" rx="1.5" fill="#5b21b6"/>
+<text x="297.8" y="256.8" font-size="8.5" fill="#6b7280" text-anchor="middle">0.58</text>
+<rect x="405.8" y="223.8" width="67.6" height="283.2" rx="1.5" fill="#c4b5fd"/>
+<text x="439.6" y="219.8" font-size="8.5" fill="#6b7280" text-anchor="middle">0.67</text>
+<rect x="482.6" y="223.8" width="67.6" height="283.2" rx="1.5" fill="#7c3aed"/>
+<text x="516.4" y="219.8" font-size="8.5" fill="#6b7280" text-anchor="middle">0.67</text>
+<rect x="559.4" y="331.9" width="67.6" height="175.1" rx="1.5" fill="#5b21b6"/>
+<text x="593.2" y="327.9" font-size="8.5" fill="#6b7280" text-anchor="middle">0.41</text>
+<rect x="701.2" y="304.4" width="67.6" height="202.6" rx="1.5" fill="#c4b5fd"/>
+<text x="734.9" y="300.4" font-size="8.5" fill="#6b7280" text-anchor="middle">0.48</text>
+<rect x="777.9" y="301.3" width="67.6" height="205.7" rx="1.5" fill="#7c3aed"/>
+<text x="811.7" y="297.3" font-size="8.5" fill="#6b7280" text-anchor="middle">0.49</text>
+<rect x="854.7" y="413.9" width="67.6" height="93.1" rx="1.5" fill="#5b21b6"/>
+<text x="888.5" y="409.9" font-size="8.5" fill="#6b7280" text-anchor="middle">0.22</text>
+<text x="225.7" y="528.0" font-size="11.0" fill="#111827" text-anchor="middle">hotpotqa</text>
+<text x="521.0" y="528.0" font-size="11.0" fill="#111827" text-anchor="middle">2wiki</text>
+<text x="816.3" y="528.0" font-size="11.0" fill="#111827" text-anchor="middle">musique</text>
+<rect x="78.0" y="543.0" width="12.0" height="12.0" rx="3" fill="#c4b5fd"/>
+<text x="95.0" y="553.0" font-size="11.0" fill="#111827">initial coverage</text>
+<rect x="213.6" y="543.0" width="12.0" height="12.0" rx="3" fill="#7c3aed"/>
+<text x="230.6" y="553.0" font-size="11.0" fill="#111827">final coverage</text>
+<rect x="336.8" y="543.0" width="12.0" height="12.0" rx="3" fill="#5b21b6"/>
+<text x="353.8" y="553.0" font-size="11.0" fill="#111827">all-requirements-covered rate</text>
+</svg>

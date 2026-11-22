@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="580" viewBox="0 0 1000 580" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+<rect width="1000" height="580" fill="#ffffff"/>
+<text x="78" y="32" font-size="18" font-weight="600" fill="#111827">Ablation: component contributions (reduced sample, n=300)</text>
+<line x1="224.1" y1="84" x2="224.1" y2="479" stroke="#e5e7eb" stroke-width="1"/>
+<text x="224.1" y="495" font-size="10" fill="#6b7280" text-anchor="middle">0.00</text>
+<line x1="470.7" y1="84" x2="470.7" y2="479" stroke="#e5e7eb" stroke-width="1"/>
+<text x="470.7" y="495" font-size="10" fill="#6b7280" text-anchor="middle">0.25</text>
+<line x1="717.4" y1="84" x2="717.4" y2="479" stroke="#e5e7eb" stroke-width="1"/>
+<text x="717.4" y="495" font-size="10" fill="#6b7280" text-anchor="middle">0.50</text>
+<line x1="964.0" y1="84" x2="964.0" y2="479" stroke="#e5e7eb" stroke-width="1"/>
+<text x="964.0" y="495" font-size="10" fill="#6b7280" text-anchor="middle">0.75</text>
+<text x="214.1" y="120.9" font-size="11" fill="#111827" text-anchor="end">A0 SAC-RAG (baseline)</text>
+<rect x="224.1" y="103.9" width="424.2" height="11.2" rx="1.5" fill="#111827"/>
+<text x="654.3" y="113.3" font-size="9.5" fill="#6b7280">0.43</text>
+<rect x="224.1" y="116.9" width="555.6" height="11.2" rx="1.5" fill="#9ca3af"/>
+<text x="785.7" y="126.3" font-size="9.5" fill="#6b7280">0.56</text>
+<text x="214.1" y="186.7" font-size="11" fill="#111827" text-anchor="end">A1 + evidence planner</text>
+<rect x="224.1" y="169.7" width="427.5" height="11.2" rx="1.5" fill="#111827"/>
+<text x="657.6" y="179.1" font-size="9.5" fill="#6b7280">0.43</text>
+<rect x="224.1" y="182.7" width="561.8" height="11.2" rx="1.5" fill="#9ca3af"/>
+<text x="791.9" y="192.1" font-size="9.5" fill="#6b7280">0.57</text>
+<text x="214.1" y="252.6" font-size="11" fill="#111827" text-anchor="end">A2 + evidence evaluator</text>
+<rect x="224.1" y="235.6" width="427.5" height="11.2" rx="1.5" fill="#111827"/>
+<text x="657.6" y="244.9" font-size="9.5" fill="#6b7280">0.43</text>
+<rect x="224.1" y="248.6" width="561.8" height="11.2" rx="1.5" fill="#9ca3af"/>
+<text x="791.9" y="257.9" font-size="9.5" fill="#6b7280">0.57</text>
+<text x="214.1" y="318.4" font-size="11" fill="#111827" text-anchor="end">A3 + gap controller</text>
+<rect x="224.1" y="301.4" width="427.5" height="11.2" rx="1.5" fill="#111827"/>
+<text x="657.6" y="310.8" font-size="9.5" fill="#6b7280">0.43</text>
+<rect x="224.1" y="314.4" width="561.8" height="11.2" rx="1.5" fill="#9ca3af"/>
+<text x="791.9" y="323.8" font-size="9.5" fill="#6b7280">0.57</text>
+<text x="214.1" y="384.2" font-size="11" fill="#111827" text-anchor="end">A4 + evidence-preserving context</text>
+<rect x="224.1" y="367.2" width="427.5" height="11.2" rx="1.5" fill="#111827"/>
+<text x="657.6" y="376.6" font-size="9.5" fill="#6b7280">0.43</text>
+<rect x="224.1" y="380.2" width="561.8" height="11.2" rx="1.5" fill="#9ca3af"/>
+<text x="791.9" y="389.6" font-size="9.5" fill="#6b7280">0.57</text>
+<text x="214.1" y="450.1" font-size="11" fill="#111827" text-anchor="end">A5 + compression</text>
+<rect x="224.1" y="433.1" width="427.5" height="11.2" rx="1.5" fill="#111827"/>
+<text x="657.6" y="442.4" font-size="9.5" fill="#6b7280">0.43</text>
+<rect x="224.1" y="446.1" width="554.5" height="11.2" rx="1.5" fill="#9ca3af"/>
+<text x="784.6" y="455.4" font-size="9.5" fill="#6b7280">0.56</text>
+<text x="594" y="509" font-size="11.5" fill="#6b7280" text-anchor="middle">score</text>
+<rect x="224.1" y="523.0" width="12.0" height="12.0" rx="3" fill="#111827"/>
+<text x="241.1" y="533.0" font-size="11.0" fill="#111827">EM</text>
+<rect x="273.4" y="523.0" width="12.0" height="12.0" rx="3" fill="#9ca3af"/>
+<text x="290.4" y="533.0" font-size="11.0" fill="#111827">F1</text>
+</svg>

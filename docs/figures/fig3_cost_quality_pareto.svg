@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="580" viewBox="0 0 1000 580" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
+<rect width="1000" height="580" fill="#ffffff"/>
+<text x="78" y="32" font-size="18" font-weight="600" fill="#111827">Cost and answer quality by system (pooled)</text>
+<line x1="344.3" y1="84" x2="344.3" y2="496" stroke="#e5e7eb" stroke-width="1"/>
+<text x="344.3" y="512" font-size="10" fill="#6b7280" text-anchor="middle">$5e-5</text>
+<line x1="473.7" y1="84" x2="473.7" y2="496" stroke="#e5e7eb" stroke-width="1"/>
+<text x="473.7" y="512" font-size="10" fill="#6b7280" text-anchor="middle">$1e-4</text>
+<line x1="603.2" y1="84" x2="603.2" y2="496" stroke="#e5e7eb" stroke-width="1"/>
+<text x="603.2" y="512" font-size="10" fill="#6b7280" text-anchor="middle">$2e-4</text>
+<line x1="774.2" y1="84" x2="774.2" y2="496" stroke="#e5e7eb" stroke-width="1"/>
+<text x="774.2" y="512" font-size="10" fill="#6b7280" text-anchor="middle">$5e-4</text>
+<line x1="903.7" y1="84" x2="903.7" y2="496" stroke="#e5e7eb" stroke-width="1"/>
+<text x="903.7" y="512" font-size="10" fill="#6b7280" text-anchor="middle">$0.0010</text>
+<text x="189.5" y="110.9" font-size="11" fill="#111827" text-anchor="end">No-RAG</text>
+<rect x="199.5" y="93.9" width="62.8" height="26.0" rx="2" fill="#6b7280"/>
+<text x="270.3" y="110.9" font-size="10" fill="#6b7280">F1 0.31</text>
+<text x="189.5" y="156.7" font-size="11" fill="#111827" text-anchor="end">Adaptive RAG (transferred)</text>
+<rect x="199.5" y="139.7" width="321.0" height="26.0" rx="2" fill="#059669"/>
+<text x="528.5" y="156.7" font-size="10" fill="#6b7280">F1 0.51</text>
+<text x="189.5" y="202.4" font-size="11" fill="#111827" text-anchor="end">Hybrid RAG (fusion depth 5)</text>
+<rect x="199.5" y="185.4" width="397.9" height="26.0" rx="2" fill="#0891b2"/>
+<text x="605.4" y="202.4" font-size="10" fill="#6b7280">F1 0.53</text>
+<text x="189.5" y="248.2" font-size="11" fill="#111827" text-anchor="end">Hybrid RAG (fusion depth 10)</text>
+<rect x="199.5" y="231.2" width="357.2" height="26.0" rx="2" fill="#0e7490"/>
+<text x="564.7" y="248.2" font-size="10" fill="#6b7280">F1 0.54</text>
+<text x="189.5" y="294.0" font-size="11" fill="#111827" text-anchor="end">Dense RAG (corpus)</text>
+<rect x="199.5" y="277.0" width="406.6" height="26.0" rx="2" fill="#2563eb"/>
+<text x="614.0" y="294.0" font-size="10" fill="#6b7280">F1 0.55</text>
+<text x="189.5" y="339.8" font-size="11" fill="#111827" text-anchor="end">Naive RAG (paper 10-&gt;5)</text>
+<rect x="199.5" y="322.8" width="406.6" height="26.0" rx="2" fill="#93c5fd"/>
+<text x="614.0" y="339.8" font-size="10" fill="#6b7280">F1 0.55</text>
+<text x="189.5" y="385.6" font-size="11" fill="#111827" text-anchor="end">Full SAC-RAG</text>
+<rect x="199.5" y="368.6" width="563.4" height="26.0" rx="2" fill="#b45309"/>
+<text x="770.9" y="385.6" font-size="10" fill="#6b7280">F1 0.57</text>
+<text x="189.5" y="431.3" font-size="11" fill="#111827" text-anchor="end">PandaRAG</text>
+<rect x="199.5" y="414.3" width="701.7" height="26.0" rx="2" fill="#7c3aed"/>
+<text x="909.2" y="431.3" font-size="10" fill="#6b7280">F1 0.58</text>
+<text x="189.5" y="477.1" font-size="11" fill="#111827" text-anchor="end">SAC-RAG Adaptive</text>
+<rect x="199.5" y="460.1" width="528.1" height="26.0" rx="2" fill="#f59e0b"/>
+<text x="735.6" y="477.1" font-size="10" fill="#6b7280">F1 0.58</text>
+<text x="582" y="558" font-size="11.5" fill="#6b7280" text-anchor="middle">mean API cost per question (USD, log scale; cache-normalised)</text>
+</svg>
