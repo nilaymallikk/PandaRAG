@@ -1,0 +1,10 @@
+{
+  "schema": "dataset",
+  "dataset": "hotpotqa",
+  "split": "validation",
+  "file": "data/hotpotqa_500.json",
+  "dataset_sha256": "956405ceb43d73385d60898e1bfc7f45a8184c9a4e1eff45b9a8ec239acfd048",
+  "evidence_kind": "sentence",
+  "expected_questions": 500,
+  "note": "Immutable experiment input. sha256 is verified at load time; the file is never written."
+}

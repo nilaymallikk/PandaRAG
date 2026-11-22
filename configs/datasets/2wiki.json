@@ -1,0 +1,10 @@
+{
+  "schema": "dataset",
+  "dataset": "2wiki",
+  "split": "dev",
+  "file": "data/2wiki_500.json",
+  "dataset_sha256": "658de4da7eb7e8db22bb2e07ff66f555d3e65490e1d327c18e3d1db77974b4e0",
+  "evidence_kind": "sentence",
+  "expected_questions": 500,
+  "note": "Immutable experiment input. sha256 is verified at load time; the file is never written."
+}

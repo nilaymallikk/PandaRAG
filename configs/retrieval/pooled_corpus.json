@@ -1,0 +1,43 @@
+{
+  "schema": "retrieval",
+  "protocol": "pooled_candidate_corpus/1.0",
+  "scope": "closed-book over each dataset's shipped paragraph pool; NOT open-domain Wikipedia",
+  "dedupe": "content hash of (dataset, split, title, paragraph text)",
+  "id_prefix": "d",
+  "dense": {
+    "model": "BAAI/bge-small-en-v1.5",
+    "metric": "cosine",
+    "index_type": "faiss.IndexFlatIP",
+    "normalized": true,
+    "query_instruction": true
+  },
+  "bm25": {
+    "implementation": "rank_bm25.BM25Okapi",
+    "k1": 1.5,
+    "b": 0.75,
+    "epsilon": 0.25,
+    "tokenizer": "regex-lowercase-alphanumeric"
+  },
+  "fusion": {
+    "method": "rrf",
+    "constant": 60.0,
+    "depth": 10
+  },
+  "k_values": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "parameter_provenance": {
+    "protocol": "implementation_choice",
+    "dedupe": "implementation_choice",
+    "dense.model": "implementation_choice (paper uses hosted text-embedding-3-small; AGENTS.md requires local)",
+    "bm25.k1": "paper_value",
+    "bm25.b": "paper_value",
+    "bm25.epsilon": "implementation_choice",
+    "bm25.tokenizer": "deviation (paper says spaCy; frozen repo tokenizer used instead)",
+    "fusion.constant": "repo_frozen",
+    "fusion.depth": "repo_frozen"
+  }
+}

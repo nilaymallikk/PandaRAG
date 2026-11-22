@@ -1,0 +1,140 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "budget",
+    "evidence_evaluator",
+    "context_builder",
+    "compression",
+    "accounting"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "enum": [
+        "pandarag"
+      ]
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_additional_rounds",
+        "max_cumulative_unique_documents",
+        "max_total_retriever_executions",
+        "max_generator_context_tokens",
+        "max_requirements"
+      ],
+      "properties": {
+        "max_additional_rounds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_cumulative_unique_documents": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_total_retriever_executions": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_generator_context_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_requirements": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        }
+      }
+    },
+    "budget_semantics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "evidence_evaluator": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "mode",
+        "statuses"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "llm_structured",
+            "local_nli"
+          ]
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "batch_requirements": {
+          "type": "boolean"
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "context_builder": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "strategy"
+      ],
+      "properties": {
+        "strategy": {
+          "type": "string"
+        },
+        "min_passages_per_covered_requirement": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "compression": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "accounting": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "auxiliary_cost_tracked_separately"
+      ],
+      "properties": {
+        "auxiliary_cost_tracked_separately": {
+          "type": "boolean"
+        },
+        "headline_tokens": {
+          "type": "string"
+        }
+      }
+    },
+    "parameter_provenance": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

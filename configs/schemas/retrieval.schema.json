@@ -1,0 +1,134 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "protocol",
+    "dense",
+    "bm25",
+    "fusion",
+    "k_values"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "enum": [
+        "retrieval"
+      ]
+    },
+    "protocol": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "dedupe": {
+      "type": "string"
+    },
+    "id_prefix": {
+      "type": "string"
+    },
+    "dense": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "model",
+        "metric",
+        "index_type",
+        "normalized"
+      ],
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "metric": {
+          "type": "string",
+          "enum": [
+            "cosine",
+            "dot",
+            "l2"
+          ]
+        },
+        "index_type": {
+          "type": "string"
+        },
+        "normalized": {
+          "type": "boolean"
+        },
+        "query_instruction": {
+          "type": "boolean"
+        }
+      }
+    },
+    "bm25": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "implementation",
+        "k1",
+        "b",
+        "epsilon",
+        "tokenizer"
+      ],
+      "properties": {
+        "implementation": {
+          "type": "string"
+        },
+        "k1": {
+          "type": "number",
+          "minimum": 0
+        },
+        "b": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "epsilon": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tokenizer": {
+          "type": "string"
+        }
+      }
+    },
+    "fusion": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "method",
+        "constant",
+        "depth"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "rrf"
+          ]
+        },
+        "constant": {
+          "type": "number",
+          "minimum": 0
+        },
+        "depth": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "k_values": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "parameter_provenance": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

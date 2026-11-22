@@ -1,0 +1,44 @@
+{
+  "schema": "pandarag",
+  "budget": {
+    "max_additional_rounds": 2,
+    "max_cumulative_unique_documents": 20,
+    "max_total_retriever_executions": 8,
+    "max_generator_context_tokens": 4000,
+    "max_requirements": 4
+  },
+  "budget_semantics": {
+    "max_additional_rounds": "additional retrieval rounds AFTER the initial retrieval (initial round is not counted)",
+    "max_cumulative_unique_documents": "cumulative count of UNIQUE candidate documents across all rounds",
+    "max_total_retriever_executions": "total individual retriever calls (one dense search = 1, one BM25 search = 1), initial round included",
+    "max_generator_context_tokens": "hard limit on the final context sent to the generator; overflow is resolved by dropping lowest-evidence passages, never by truncating a requirement",
+    "max_requirements": "cap on planner output; exceeding it fails validation and triggers the documented fallback"
+  },
+  "evidence_evaluator": {
+    "mode": "llm_structured",
+    "temperature": 0.0,
+    "batch_requirements": true,
+    "statuses": [
+      "supported",
+      "partial",
+      "insufficient",
+      "contradicted",
+      "unknown"
+    ]
+  },
+  "context_builder": {
+    "strategy": "evidence_preserving_extractive",
+    "min_passages_per_covered_requirement": 1
+  },
+  "compression": {
+    "enabled": false
+  },
+  "accounting": {
+    "auxiliary_cost_tracked_separately": true,
+    "headline_tokens": "generation_only"
+  },
+  "parameter_provenance": {
+    "budget": "implementation_choice (engineering limits, frozen before final runs)",
+    "evidence_evaluator.mode": "implementation_choice"
+  }
+}

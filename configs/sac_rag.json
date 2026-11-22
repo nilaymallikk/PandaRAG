@@ -1,0 +1,55 @@
+{
+  "schema": "sac_rag",
+  "classifier": {
+    "source": "src.classifier",
+    "prompt_version": "sac-rag-classifier/1.3",
+    "labels": [
+      "Fact",
+      "Definition",
+      "Reasoning"
+    ],
+    "fallback": "reasoning"
+  },
+  "fact": {
+    "dense_top_k": 10,
+    "bm25_top_k": 10,
+    "rerank": true,
+    "final_k": 10
+  },
+  "definition": {
+    "dense_top_k": 8,
+    "bm25": false,
+    "rerank": false,
+    "final_k": 8
+  },
+  "reasoning": {
+    "decompose": true,
+    "max_subquestions": 4,
+    "dense_top_k": 10,
+    "rerank": true,
+    "final_k": 10
+  },
+  "compression": {
+    "enabled": false,
+    "max_output_tokens": 768,
+    "mode": "extractive_with_attribution"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "same_model_as_baselines": true
+  },
+  "parameter_provenance": {
+    "classifier.prompt_version": "implementation_choice (paper prompt unpublished)",
+    "fact.dense_top_k": "paper_value",
+    "fact.bm25_top_k": "paper_value",
+    "fact.final_k": "paper_value",
+    "definition.dense_top_k": "paper_value",
+    "definition.final_k": "paper_value",
+    "definition.rerank": "paper_value (Table 3 applies the reranker to Fact/Reasoning only)",
+    "reasoning.dense_top_k": "paper_value",
+    "reasoning.final_k": "paper_value",
+    "reasoning.max_subquestions": "implementation_choice (paper gives no k)",
+    "compression.max_output_tokens": "implementation_choice",
+    "compression.mode": "implementation_choice (paper does not state extractive vs abstractive)"
+  }
+}

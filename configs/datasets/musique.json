@@ -1,0 +1,10 @@
+{
+  "schema": "dataset",
+  "dataset": "musique",
+  "split": "validation",
+  "file": "data/musique_500.json",
+  "dataset_sha256": "79f5aefa5a2a286fe1d3c2bd7194ba7d18c64c161adeeca0ed0e50b2e28eb5a5",
+  "evidence_kind": "paragraph",
+  "expected_questions": 500,
+  "note": "Immutable experiment input. sha256 is verified at load time; the file is never written."
+}

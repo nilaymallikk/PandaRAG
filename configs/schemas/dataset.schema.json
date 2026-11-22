@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "dataset",
+    "split",
+    "file",
+    "dataset_sha256",
+    "evidence_kind",
+    "expected_questions"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "enum": [
+        "dataset"
+      ]
+    },
+    "dataset": {
+      "type": "string"
+    },
+    "split": {
+      "type": "string"
+    },
+    "file": {
+      "type": "string"
+    },
+    "dataset_sha256": {
+      "type": "string"
+    },
+    "evidence_kind": {
+      "type": "string",
+      "enum": [
+        "sentence",
+        "paragraph"
+      ]
+    },
+    "expected_questions": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "note": {
+      "type": "string"
+    }
+  }
+}

@@ -1,6 +1,22 @@
 # AGENTS.md
 
-## Project
+## Scope: two projects live in this repository
+
+This file now governs **two** scopes. Read the one that applies before acting.
+
+| Scope | Lives in | Status | Governed by |
+|---|---|---|---|
+| **A. Legacy experiment** (4 pipelines, HotpotQA-500) | `src/pipelines/{no_rag,standard_rag,hybrid_rag,adaptive_rag}.py`, `results/*.jsonl`, `results/retrieval/`, `data/hotpotqa_500.json` | **FROZEN — complete, published internally** | The legacy sections below (unchanged) |
+| **B. PandaRAG project** (SAC-RAG reimplementation + proposed method) | `src/datasets/`, `src/retrieval/`, `src/pipelines/sac_rag/`, `src/pipelines/pandarag/`, `configs/`, `docs/pandarag/`, `results/sac_rag/`, `results/pandarag/` | **Active** | §"PandaRAG project" below + `docs/pandarag/experiment_protocol.md` |
+
+**The legacy sections below were written for Scope A only.** Where they conflict with Scope B
+(most importantly "do NOT download another dataset" and "exactly these 500 questions"), they apply
+to Scope A and do **not** constrain Scope B. Scope A artifacts must never be modified to serve
+Scope B.
+
+---
+
+## Project (Scope A — legacy, frozen)
 
 This is a research project investigating:
 
@@ -366,3 +382,73 @@ Do not change the evaluation methodology after seeing results.
 
 When uncertain about an experimental decision, explain the issue
 before making a major change.
+
+---
+
+# PandaRAG project (Scope B — active)
+
+Full specification and rationale: `docs/pandarag/implementation_plan.md`.
+Parameter provenance and deviations: `docs/pandarag/sac_rag_reproduction_protocol.md`.
+Repository state: `docs/pandarag/repository_audit.md`.
+
+## Systems under study
+
+`P0` No-RAG · `P1` Standard RAG · `P2` Hybrid RAG · `P3` Adaptive RAG (all four legacy, frozen)
+`P1c`/`P2c`/`P3c` corpus-protocol twins · `P1n` paper-specified naïve baseline ·
+`P4` SAC-RAG Adaptive · `P5` Full SAC-RAG · `P6` PandaRAG · `P7` PandaRAG + compression.
+
+## Dataset scope
+
+Three datasets, each with its own isolated corpus and split:
+
+- HotpotQA — `data/hotpotqa_500.json` (validation/distractor, hard-only, 2-hop)
+- 2WikiMultiHopQA — `data/2wiki_500.json` (dev, 2-hop filtered)
+- MuSiQue — `data/musique_500.json` (validation, answerable only)
+
+These files are already present, committed and fingerprinted in `data/dataset_manifest.json`.
+**No further dataset downloads without explicit authorization.** Never resample, reshuffle or edit
+these files, and never mix corpora or splits between datasets.
+
+## Corpus protocol (decision D2)
+
+Pooled candidate corpus: the union of every paragraph shipped with each question in the dataset
+file, deduplicated by content. Document ids are **content-derived** (`sha1(title + text)`), never
+positional. Each corpus artifact carries the dataset fingerprint, the split, the document count and
+its own sha256. This corpus is described as a *pooled candidate corpus*; it is **not** open-domain
+Wikipedia and its Recall@10 must never be compared with the base paper's.
+
+## Non-negotiable integrity rules (Scope B)
+
+1. Gold answers, gold supporting documents and gold sentences must never reach runtime retrieval,
+   planning, evaluation-of-support or control decisions. Gold is used offline for metrics only.
+2. Every result record carries dataset + split + pipeline + corpus fingerprint + resolved config
+   fingerprint.
+3. Thresholds, budgets and prompts are frozen before final evaluation and never tuned on the data
+   being reported.
+4. Auxiliary LLM cost (classifier, planner, evidence evaluator, compressor, judge) is recorded
+   separately from generation cost. Headline "Avg Tokens" stays generation-only, with the auxiliary
+   figure always reported adjacent to it.
+5. Outputs are additive: `results/sac_rag/`, `results/pandarag/`. Never overwrite Scope A artifacts.
+6. A cached/replayed run is never reported as a live run.
+7. Failed API calls are logged, never silently dropped, never replaced with estimates.
+8. No gold-label tuning, no post-hoc metric redefinition, no fabricated numbers.
+9. No framework, hosted vector store, web service or Docker introduced for Scope B.
+
+## Terminological rule
+
+The base paper's corpus, classifier prompt, decomposition prompt and compression prompt are **not
+published**. Therefore this work is a **best-effort architectural reimplementation**, never an
+"exact reproduction". Every deviation is recorded in
+`docs/pandarag/sac_rag_reproduction_protocol.md` (deviation ledger DV1–DV12) and must be repeated in
+any write-up. `P1n` is called a paper-specified baseline **only** where the paper states that
+configuration explicitly.
+
+## Development order (Scope B)
+
+Phase 0 audit (done) → Phase 1 datasets + corpus + indexes (local only, no LLM calls) → Phase 2
+SAC-RAG Adaptive → Phase 3 Full SAC-RAG (compression) → Phase 4 planner + evidence evaluator →
+Phase 5 gap controller → Phase 6 context builder + generator → Phase 7 pilots (≈50 questions,
+engineering only) → Phase 8 freeze + full evaluation → Phase 9 paper-ready analysis.
+
+A phase is not complete until its tests are written and passing. Completed phases must be reviewed
+before the next phase starts.
